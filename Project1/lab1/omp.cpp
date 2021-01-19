@@ -18,7 +18,7 @@ void GemmParallel(const float a[kI][kK], const float b[kK][kJ],
 
   int k, i, j;
   for (k = 0; k < kK; k += 4) {
-    #pragma omp parallel for num_threads(8) schedule(guided)
+    #pragma omp parallel for num_threads(8) private(j) schedule(guided)
     for (i = 0; i < kI; ++i) {
       for (j = 0; j < kJ; ++j) {
         c[i][j] += a[i][k] * b[k][j];
