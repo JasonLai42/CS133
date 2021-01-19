@@ -1,0 +1,10 @@
+1. Loop Permutation - move k loop to outermost SUCCESS
+2. Loop Unroll-and-jam
+	- Unrolling j is no good FAIL
+	- Unrolling i gets some perf SUCCESS
+		- 4 gets best perf improv.
+		- 6 gives bus error
+		- 8 perf drops
+	- Unrolling k
+		- k with +2 and i with + 4 is ok
+		- k by itself is the BEST
