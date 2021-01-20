@@ -21,10 +21,7 @@ void GemmParallel(const float a[kI][kK], const float b[kK][kJ],
     #pragma omp parallel for num_threads(8) private(j) schedule(guided)
     for (i = 0; i < kI; ++i) {
       for (j = 0; j < kJ; ++j) {
-        c[i][j] += a[i][k] * b[k][j];
-        c[i][j] += a[i][k+1] * b[k+1][j];
-        c[i][j] += a[i][k+2] * b[k+2][j];
-        c[i][j] += a[i][k+3] * b[k+3][j];
+        c[i][j] += (a[i][k] * b[k][j]) + (a[i][k+1] * b[k+1][j]) + (a[i][k+2] * b[k+2][j]) + (a[i][k+3] * b[k+3][j]);
       }
     }
   }
