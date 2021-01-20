@@ -13,7 +13,6 @@
 4. guided scheduling
 5. blocked matrix mult - loop tiling
 	- 119.55 GFlops highest at 4096
-6. collapse(2)
 
 Testing:
 	Parallel:
