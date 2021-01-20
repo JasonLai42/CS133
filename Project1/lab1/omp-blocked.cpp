@@ -19,7 +19,7 @@ void GemmParallelBlocked(const float a[kI][kK], const float b[kK][kJ],
   }
 
   int i, j, k, ii, jj;
-  #pragma omp parallel for num_threads(8) private(j, k, ii, jj) schedule(guided)
+  #pragma omp parallel for num_threads(8) private(j, k, ii, jj) collapse(2) schedule(guided)
   for (i = 0; i < kI; i += block_size) {
     for (j = 0; j < kJ; j += block_size) {
       for (k = 0; k < kK; k += 4) {
