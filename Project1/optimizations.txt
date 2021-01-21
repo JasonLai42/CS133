@@ -63,118 +63,206 @@ Testing:
 Results:
 	Sequential:
 		- 1024:
-			- 
+			- 3.9456 s, 0.544273 GFlops
 		- 2048: 
-			- 
+			- 67.6073 s, 0.254113 GFlops
 		- 4096: 
-			- 
+			- 722.219 s, 0.190301 GFlops
 
 	Parallel: 
 		- 1024: 
-			- 
+			- 0.019555 s, 109.818 GFlops
+			- 0.019328 s, 111.107 GFlops
+			- 0.019917 s, 107.822 GFlops
 		- 2048: 
-			- 
+			- 0.13342 s, 128.765 GFlops
+			- 0.133356 s, 128.827 GFlops
+			- 0.134673 s, 127.567 GFlops
 		- 4096: 
-			- 
+			- 2.55299 s, 53.8344 GFlops
+			- 2.57649 s, 53.3434 GFlops
+			- 2.63709 s, 52.1176 GFlops
 
 	Parallel-Blocked: 
 		- 1024: 
-			- 
+			- 0.012489 s, 171.95 GFlops
+			- 0.012136 s, 176.952 GFlops
+			- 0.012169 s, 176.472 GFlops
 		- 2048: 
-			- 
+			- 0.090141 s, 190.589 GFlops
+			- 0.103173 s, 166.515 GFlops
+			- 0.098402 s, 174.589 GFlops
 		- 4096: 
-			- 
+			- 0.778938 s, 176.444 GFlops
+			- 0.791847 s, 173.568 GFlops
+			- 0.788816 s, 174.234 GFlops
 
 		Optimizations @4096
 		1. Blocked matrix mult - loop tiling
 			a. Tiling just i and j
-				- 
+				- 0.866024 s, 158.701 GFlops
+				- 0.839088 s, 163.796 GFlops
+				- 0.934216 s, 147.117 GFlops
 			b. Tiling all three (default)
-				- 
+				- 0.749783 s, 183.305 GFlops
+				- 0.752447 s, 182.656 GFlops
+				- 0.785896 s, 174.882 GFlops
 		2. Block Sizes
 			a. 128, 128, 128
-				- 
-			b. 64, 128, 64
-				- 
-			c. 64, 64, 128
-				- 
-			d. 32, 128, 64
-				- 
-			e. 32, 256, 64
-				- 
+				- 1.2354 s, 111.25 GFlops
+				- 1.22961 s, 111.775 GFlops
+				- 1.23886 s, 110.94 GFlops
+			b. 64, 64, 128
+				- 1.51018 s, 91.0083 GFlops
+				- 1.50762 s, 91.163 GFlops
+				- 1.5171 s, 90.593 GFlops
+			c. 64, 128, 64
+				- 1.15378 s, 119.121 GFlops
+				- 1.14259 s, 120.288 GFlops
+				- 1.09932 s, 125.021 GFlops
+			d. 128, 64, 64
+				- 1.78765 s, 76.8826 GFlops
+				- 1.78417 s, 77.0323 GFlops
+				- 1.83958 s, 74.7123 GFlops
+			e. 32, 128, 64
+				- 1.03747 s, 132.475 GFlops
+				- 1.05302 s, 130.519 GFlops
+				- 1.06438 s, 129.125 GFlops
+			f. 16, 128, 64
+				- 1.02545 s, 134.028 GFlops
+				- 1.08259 s, 126.954 GFlops
+				- 1.05802 s, 129.902 GFlops
+			g. 32, 256, 64
+				- 0.849526 s, 161.783 GFlops
+				- 0.873945 s, 157.263 GFlops
+				- 0.866061 s, 158.694 GFlops
+			h. 32, 512, 64
+				- 0.77367 s, 177.645 GFlops
+				- 0.778612 s, 176.518 GFlops
+				- 0.825379 s, 166.516 GFlops
+			i. 32, 512, 128 (default)
+				- 0.799328 s, 171.943 GFlops
+				- 0.796532 s, 172.547 GFlops
+				- 0.751309 s, 182.933 GFlops
+			j. 32, 512, 256 
+				- 0.756478 s, 181.683 GFlops
+				- 0.751353 s, 182.922 GFlops
+				- 0.82931 s, 165.727 GFlops
+			k. 32, 512, 512
+				- 0.829637 s, 165.662 GFlops
+				- 0.825032 s, 166.586 GFlops
+				- 0.833479 s, 164.898 GFlops
 		3. kk loop Unroll-and-jam
 			a. 2 iterations
-				- 
+				- 1.01988 s, 134.76 GFlops
+				- 1.02024 s, 134.713 GFlops
+				- 1.01581 s, 135.299 GFlops
 			b. 4 iterations (default)
-				- 
+				- 0.811678 s, 169.327 GFlops
+				- 0.803573 s, 171.035 GFlops
+				- 0.798418 s, 172.139 GFlops
 			c. 8 iterations
-				- 
+				- 0.850752 s, 161.55 GFlops
+				- 0.897426 s, 153.148 GFlops
+				- 0.927534 s, 148.177 GFlops
 			d. 6 iterations
 				- lead to error
 		4. Consolidate all writes on one line
 			a. Without
-				- 
+				- 1.14686 s, 119.839 GFlops
+				- 1.16358 s, 118.118 GFlops
+				- 1.1323 s, 121.381 GFlops
 			b. With (default)
-				- 
+				- 0.783133 s, 175.499 GFlops
+				- 0.780889 s, 176.003 GFlops
+				- 0.796656 s, 172.52 GFlops
 		5. Loop Permutation
 			a. i->j->k->ii->jj->kk no perm
-				- 
+				- 49.0999 s, 2.79917 GFlops
+				- 48.8938 s, 2.81097 GFlops
+				- 49.1683 s, 2.79528 GFlops
 			b. i->j->k->ii->kk->jj
-				- 
+				- 2.50815 s, 54.7969 GFlops
+				- 2.06001 s, 66.7176 GFlops
+				- 1.89569 s, 72.5007 GFlops
 			c. i->j->k->kk->ii->jj
-				- 
+				- 0.922129 s, 149.045 GFlops
+				- 0.888804 s, 154.634 GFlops
+				- 0.920335 s, 149.336 GFlops
 			d. i->k->j->kk->ii->jj (default)
-				- 
+				- 0.829184 s, 165.752 GFlops
+				- 0.759552 s, 180.947 GFlops
+				- 0.762174 s, 180.325 GFlops
 			e. k->i->j->kk->ii->jj
 				- lead to error
 		6. Parallel Threads
 			a. 4
-				- 
+				- 0.771716 s, 178.095 GFlops
+				- 0.77027 s, 178.43 GFlops
+				- 0.802881 s, 171.182 GFlops
 			b. 6
-				- 
+				- 0.815921 s, 168.446 GFlops
+				- 0.809839 s, 169.711 GFlops
+				- 0.827137 s, 166.162 GFlops
 			c. 8 (default)
-				- 
+				- 0.778986 s, 176.433 GFlops
+				- 0.789251 s, 174.138 GFlops
+				- 0.791675 s, 173.605 GFlops
 		7. Parallel scheduling
 			a. without (default)
-				- 
+				- 0.790197 s, 173.93 GFlops
+				- 0.851939 s, 161.325 GFlops
+				- 0.799068 s, 171.999 GFlops
 			b. static
-				- 
+				- 0.813542 s, 168.939 GFlops
+				- 0.788782 s, 174.242 GFlops
+				- 0.756863 s, 181.59 GFlops
 			c. static, 2
-				- 
+				- 0.838066 s, 163.995 GFlops
+				- 0.745482 s, 184.363 GFlops
+				- 0.779928 s, 176.22 GFlops
 			d. static, 4
-				- 
-			e. guided
-				- 
+				- 0.790691 s, 173.821 GFlops
+				- 0.757825 s, 181.36 GFlops
+				- 0.828902 s, 165.808 GFlops
+			e. static, 6
+				- 0.81464 s, 168.711 GFlops
+				- 0.871629 s, 157.681 GFlops
+				- 0.841466 s, 163.333 GFlops
+			f. guided
+				- 0.818639 s, 167.887 GFlops
+				- 0.79374 s, 173.154 GFlops
+				- 0.782244 s, 175.698 GFlops
 
 Scalability: 
-	m5.2xlarge: 24 core processor - only 4 usable; 8 threads supported
+	m5.2xlarge: 24 core processor - only 4 cores usable; 8 threads supported
 	
 	Thread Count: 
 		1. 1
-			- 6.08101 s, 22.6013 GFlops
-			- 6.38269 s, 21.5331 GFlops
-			- 6.29598 s, 21.8296 GFlops
+			- 3.39635 s, 40.4666 GFlops
+			- 3.32808 s, 41.2968 GFlops
+			- 3.35837 s, 40.9243 GFlops
 		2. 2
-			- 2.70114 s, 50.8819 GFlops
-			- 2.68098 s, 51.2644 GFlops
-			- 2.68666 s, 51.1561 GFlops
+			- 1.59008 s, 86.4351 GFlops
+			- 1.57857 s, 87.0654 GFlops
+			- 1.57521 s, 87.2512 GFlops
 		3. 4
-			- 1.36155 s, 100.943 GFlops
-			- 1.39116 s, 98.7942 GFlops
-			- 1.43721 s, 95.6287 GFlops
+			- 0.771865 s, 178.061 GFlops
+			- 0.768774 s, 178.777 GFlops
+			- 0.770021 s, 178.487 GFlops
 		4. 8
-			- 1.2289 s, 111.839 GFlops
-			- 1.23725 s, 111.084 GFlops
-			- 1.24564 s, 110.336 GFlops
+			- 0.759977 s, 180.846 GFlops
+			- 0.780999 s, 175.978 GFlops
+			- 0.771593 s, 178.124 GFlops
 		5. 16
-			- 1.19019 s, 115.477 GFlops
-			- 1.16442 s, 118.032 GFlops
-			- 1.1762 s, 116.85 GFlops
+			- 0.875904 s, 156.911 GFlops
+			- 0.85931 s, 159.941 GFlops
+			- 0.840954 s, 163.432 GFlops
 		6. 24
-			- 1.17309 s, 117.16 GFlops
-			- 1.18859 s, 115.632 GFlops
-			- 1.18907 s, 115.585 GFlops
+			- 0.876374 s, 156.827 GFlops
+			- 0.848692 s, 161.942 GFlops
+			- 0.870624 s, 157.863 GFlops
 		7. 32
-			- 1.16646 s, 117.825 GFlops
-			- 1.16772 s, 117.698 GFlops
-			- 1.1732 s, 117.149 GFlops
+			- 0.870624 s, 157.863 GFlops
+			- 0.879391 s, 156.289 GFlops
+			- 0.87489 s, 157.093 GFlops
