@@ -59,3 +59,149 @@ Testing:
 			- 256: 85.5151 - 88.8718 GFlops
 			- 512: 75.5845 - 77.2431 GFlops
 			- 1024: 71.8349 - 73.4018 GFlops
+
+Results:
+	Sequential:
+		- 1024:
+			- 3.72328 s, 0.576772 GFlops
+		- 2048: 
+			- 62.2624 s, 0.275927 GFlops
+		- 4096: 
+			- 714.47 s, 0.192365 GFlops
+
+	Parallel: 
+		- 1024: 
+			- 0.019008 s, 112.978 GFlops
+			- 0.019393 s, 110.735 GFlops
+			- 0.019062 s, 112.658 GFlops
+		- 2048: 
+			- 0.133177 s, 129 GFlops
+			- 0.133119 s, 129.056 GFlops
+			- 0.13645 s, 125.906 GFlops
+		- 4096: 
+			- 1.96535 s, 69.931 GFlops
+			- 1.96955 s, 69.7817 GFlops
+			- 2.00847 s, 68.4297 GFlops
+
+	Parallel-Blocked: 
+		- 1024: 
+			- 0.017908 s, 119.918 GFlops
+			- 0.018246 s, 117.696 GFlops
+			- 0.017524 s, 122.545 GFlops
+		- 2048: 
+			- 0.146649 s, 117.15 GFlops
+			- 0.16305 s, 105.366 GFlops
+			- 0.146659 s, 117.142 GFlops
+		- 4096: 
+			- 1.2522 s, 109.758 GFlops
+			- 1.24205 s, 110.655 GFlops
+			- 1.26129 s, 108.967 GFlops
+
+		Optimizations @4096
+		1. Blocked matrix mult - loop tiling
+			a. Tiling just i and j
+				- 1.4372 s, 95.6295 GFlops
+				- 1.45789 s, 94.2724 GFlops
+				- 1.44445 s, 95.1497 GFlops
+			b. Tiling all three (default)
+				- 1.22787 s, 111.933 GFlops
+				- 1.22916 s, 111.815 GFlops
+				- 1.20553 s, 114.007 GFlops
+		2. Block Sizes
+			a. 32
+				- 1.92793 s, 71.2884 GFlops
+				- 1.99097 s, 69.0311 GFlops
+				- 2.03248 s, 67.6212 GFlops
+			b. 64
+				- 1.49613 s, 91.8632 GFlops
+				- 1.46658 s, 93.714 GFlops
+				- 1.48817 s, 92.3543 GFlops
+			c. 128 (default)
+				- 1.20452 s, 114.102 GFlops
+				- 1.21013 s, 113.574 GFlops
+				- 1.19333 s, 115.173 GFlops
+			d. 256
+				- 1.35894 s, 101.137 GFlops
+				- 1.35117 s, 101.718 GFlops
+				- 1.3386 s, 102.674 GFlops
+			e. 512
+				- 1.29228 s, 106.353 GFlops
+				- 1.2917 s, 106.402 GFlops
+				- 1.31984 s, 104.133 GFlops
+		3. kk loop Unroll-and-jam
+			a. 2 iterations
+				- 1.78343 s, 77.0644 GFlops
+				- 1.76372 s, 77.9256 GFlops
+				- 1.74313 s, 78.846 GFlops
+			b. 4 iterations (default)
+				- 1.2399 s, 110.847 GFlops
+				- 1.20903 s, 113.677 GFlops
+				- 1.24719 s, 110.199 GFlops
+			c. 8 iterations
+				- 1.28899 s, 106.626 GFlops
+				- 1.23838 s, 110.983 GFlops
+				- 1.27733 s, 107.598 GFlops
+			d. 6 iterations
+				- lead to error
+		4. Consolidate all writes on one line
+			a. Without
+				- 1.48255 s, 92.7045 GFlops
+				- 1.45007 s, 94.7808 GFlops
+				- 1.4964 s, 91.8465 GFlops
+			b. With (default)
+				- 1.23829 s, 110.991 GFlops
+				- 1.19906 s, 114.622 GFlops
+				- 1.18748 s, 115.74 GFlops
+		5. Loop Permutation
+			a. i->j->k->ii->jj->kk no perm
+				- 45.642 s, 3.01124 GFlops
+				- 45.4901 s, 3.02129 GFlops
+				- 46.9072 s, 2.93002 GFlops
+			b. i->j->k->ii->kk->jj
+				- 2.74573 s, 50.0556 GFlops
+				- 2.73529 s, 50.2465 GFlops
+				- 2.82205 s, 48.7017 GFlops
+			c. i->j->k->kk->ii->jj
+				- 1.42822 s, 96.2307 GFlops
+				- 1.45953 s, 94.1666 GFlops
+				- 1.44576 s, 95.0636 GFlops
+			d. i->k->j->kk->ii->jj (default)
+				- 1.22947 s, 111.787 GFlops
+				- 1.22901 s, 111.829 GFlops
+				- 1.24981 s, 109.968 GFlops
+			e. k->i->j->kk->ii->jj
+				- lead to error
+		6. Parallel Threads
+			a. 4
+				- 1.35396 s, 101.509 GFlops
+				- 1.37134 s, 100.222 GFlops
+				- 1.38308 s, 99.3719 GFlops
+			b. 6
+				- 1.43947 s, 95.4786 GFlops
+				- 1.43722 s, 95.6283 GFlops
+				- 1.4491 s, 94.8444 GFlops
+			c. 8 (default)
+				- 1.20536 s, 114.024 GFlops
+				- 1.20265 s, 114.28 GFlops
+				- 1.20295 s, 114.252 GFlops
+		7. Parallel scheduling
+			a. without (default)
+				- 1.24701 s, 110.215 GFlops
+				- 1.22787 s, 111.933 GFlops
+				- 1.20534 s, 114.025 GFlops
+			b. static
+				- 1.23071 s, 111.674 GFlops
+				- 1.22279 s, 112.398 GFlops
+				- 1.22475 s, 112.218 GFlops
+			c. static, 2
+				- 1.26251 s, 108.862 GFlops
+				- 1.19772 s, 114.75 GFlops
+				- 1.24221 s, 110.641 GFlops
+			d. static, 4
+				- 1.21752 s, 112.884 GFlops
+				- 1.19181 s, 115.32 GFlops
+				- 1.21405 s, 113.207 GFlops
+			e. guided
+				- 1.23283 s, 111.483 GFlops
+				- 1.20199 s, 114.342 GFlops
+				- 1.21822 s, 112.819 GFlops
