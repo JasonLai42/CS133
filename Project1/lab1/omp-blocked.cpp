@@ -13,7 +13,7 @@ void GemmParallelBlocked(const float a[kI][kK], const float b[kK][kJ],
   
   int block_sizeI = 32;
   int block_sizeJ = 512;
-  int block_sizeK = 128;
+  int block_sizeK = 256;
 
   #pragma omp parallel for num_threads(8)
   for (int i = 0; i < kI; ++i) {
