@@ -153,6 +153,10 @@ Results:
 				- 0.825032 s, 166.586 GFlops
 				- 0.833479 s, 164.898 GFlops
 		3. kk loop Unroll-and-jam
+			a. without
+				- 1.67522 s, 82.0425 GFlops
+				- 1.66776 s, 82.4092 GFlops
+				- 1.65574 s, 83.0076 GFlops
 			a. 2 iterations
 				- 1.01988 s, 134.76 GFlops
 				- 1.02024 s, 134.713 GFlops
@@ -196,6 +200,10 @@ Results:
 			e. k->i->j->kk->ii->jj
 				- lead to error
 		6. Parallel Threads
+			a. 1
+				- 3.25 s, 42.2889 GFlops
+				- 3.30478 s, 41.588 GFlops
+				- 3.31865 s, 41.4141 GFlops
 			a. 4
 				- 0.771716 s, 178.095 GFlops
 				- 0.77027 s, 178.43 GFlops
