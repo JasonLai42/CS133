@@ -1,6 +1,5 @@
 // Header inclusions, if any...
 
-#include <stdlib.h>
 #include <string.h>
 #include <mpi.h>
 
@@ -31,8 +30,8 @@ void GemmParallelBlocked(const float a[kI][kK], const float b[kK][kJ],
   float *sendA = (float*)lab2::aligned_alloc(4096, kI * kK * sizeof(float));
   float *sendB = (float*)lab2::aligned_alloc(4096, kK * kJ * sizeof(float));
   if(rank == 0) {
-    std::memcpy(sendA, a, kI * kK * sizeof(float));
-    std::memcpy(sendB, b, kK * kJ * sizeof(float));
+    memcpy(sendA, a, kI * kK * sizeof(float));
+    memcpy(sendB, b, kK * kJ * sizeof(float));
   }
   
   // Store computed rows of c
@@ -45,19 +44,9 @@ void GemmParallelBlocked(const float a[kI][kK], const float b[kK][kJ],
   MPI_Scatter(sendA, chunk_size * kK, MPI_FLOAT, recA, chunk_size * kK, MPI_FLOAT, 0, MPI_COMM_WORLD);
   MPI_Bcast(sendB, kK * kJ, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
-  std::memset(productC, 0, chunk_size * kJ * sizeof(float));
+  memset(productC, 0, chunk_size * kJ * sizeof(float));
 
-  // for(int ii = 0; ii < chunk_size; ii += 64)
-  //   for(int jj = 0; jj < kJ; jj += 1024)
-  //     for(int kk = 0; kk < kK; kk += 8)
-  //       for(int i = 0; i < 64; i++)
-  //         for(int j = 0; j < 1024; j++) {
-  //           float reg = productC[((i + ii) * kJ) + (j + jj)];
-  //           for(int k = 0; k < 8; k++)
-  //             reg += recA[((i + ii) * kK) + (k + kk)] * sendB[((k + kk) * kJ) + (j + jj)];
-  //           productC[((i + ii) * kJ) + (j + jj)] = reg;
-  //         }
-
+  // Only iterate up to chunk_size rows each "system" gets allocated
   for (int i = 0; i < chunk_size; i += block_sizeI) {
     for (int k = 0; k < kK; k += block_sizeK) {
       for (int j = 0; j < kJ; j += block_sizeJ) {
