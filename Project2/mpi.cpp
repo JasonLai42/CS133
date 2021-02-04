@@ -67,4 +67,10 @@ void GemmParallelBlocked(const float a[kI][kK], const float b[kK][kJ],
 
   // Gather chunks back to process 0
   MPI_Gather(productC, chunk_size * kJ, MPI_FLOAT, c, chunk_size * kJ, MPI_FLOAT, 0, MPI_COMM_WORLD);
+
+  // Free allocated memory
+  free(sendA);
+  free(sendB);
+  free(productC);
+  free(recA);
 }
