@@ -40,10 +40,11 @@ void GemmParallelBlocked(const float a[kI][kK], const float b[kK][kJ],
   // Receive buffers
   float *recA = (float*)lab2::aligned_alloc(4096, chunk_size * kK * sizeof(float));
 
-
+  // Scatter allocated rows of matrix a to specific ranked processes; Broadcast b matrix to all processes
   MPI_Scatter(sendA, chunk_size * kK, MPI_FLOAT, recA, chunk_size * kK, MPI_FLOAT, 0, MPI_COMM_WORLD);
   MPI_Bcast(sendB, kK * kJ, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
+  // Set all values of pieces of matrix c result to 0
   memset(productC, 0, chunk_size * kJ * sizeof(float));
 
   // Only iterate up to chunk_size rows each "system" gets allocated
