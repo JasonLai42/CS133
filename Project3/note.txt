@@ -1,0 +1,26 @@
+
+
+We have an input image with 256 channels of size 228 x 228.
+
+The intermediate image after the convolution layer is 224 x 224 with 256 channels.
+    224 because each window that we apply a filter to is 5 x 5. 
+    The element in the center of the window is essentially the position of the output pixel so we lose the 2 unit width frame around it.
+
+We max pool a 2 x 2 tile (pool size) so we get a 112 x 112 image with 256 channels in the end.
+
+Convolution Layer
+
+    LOOP 1: Set bias for each channel    
+        We have 256 biases, one for each channel.
+
+    LOOP 2: Perform Convolution 
+        Multiply element in window of image with corresponding element in filter; window is 5 x 5.
+        We have 256 filters. Each filter has 256 channels. Each filter is size 5 x 5.
+
+    LOOP 3: Perform ReLU 
+        Take max of convolution product + bias and 0.
+
+Max Pooling Layer
+
+    LOOP 4: Perform Max Pooling
+        Take 4 pixels (in a 2 x 2 tile) and for each of the 256 channel, we take the max value of those 4 pixels.
