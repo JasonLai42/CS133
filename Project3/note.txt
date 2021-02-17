@@ -24,3 +24,11 @@ Max Pooling Layer
 
     LOOP 4: Perform Max Pooling
         Take 4 pixels (in a 2 x 2 tile) and for each of the 256 channel, we take the max value of those 4 pixels.
+
+
+1. Reduce memory usage
+- Loop fusion
+    We reduce memory usage by cutting C down to 2 dimensions.
+    Before, we stored the output for each channel of the intermediate array to its own part of C, given that the array had a third dimension to store each channel.
+    Now, we fuse the loop, so that we instead just rewrite C on each iteration of i (which is each channel), and write to the output array before moving on to the next channel.
+
