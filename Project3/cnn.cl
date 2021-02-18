@@ -4,9 +4,9 @@ __constant int kImSize = 224;
 __constant int kInImSize = 228;
 __constant int kOutImSize = 112;
 
-#define c_access(y,z) C[(y)*kInImSize+(z)]
+#define c_access(y,z) C[(y)*kImSize+(z)]
 #define weight_access(w,x,y,z) weight[(w)*kNum*kKernel*kKernel+(x)*kKernel*kKernel+(y)*kKernel+(z)]
-#define input_access(x,y,z) input[(x)*kImSize*kImSize+(y)*kImSize+(z)]
+#define input_access(x,y,z) input[(x)*kInImSize*kInImSize+(y)*kInImSize+(z)]
 #define output_access(x,y,z) output[(x)*kOutImSize*kOutImSize+(y)*kOutImSize+(z)]
 
 __kernel
@@ -61,7 +61,7 @@ void CnnKernel(__constant float* input, __constant float* weight,
         // LOOP 4: Max pooling
           for(int hh = 0; hh < h_tile/2; hh++) {
             for(int ww = 0; ww < w_tile/2; ww++) {
-              output_access(i,(h / 2 + h_tile),(w / 2 + w_tile)) = max(
+              output_access(i,(h / 2 + hh),(w / 2 + ww)) = max(
                 max(c_access((hh * 2),(ww * 2    )), c_access((hh * 2 + 1),(ww * 2    ))), 
                 max(c_access((hh * 2),(ww * 2 + 1)), c_access((hh * 2 + 1),(ww * 2 + 1))));
             }

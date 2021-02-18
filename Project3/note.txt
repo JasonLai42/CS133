@@ -31,4 +31,5 @@ Max Pooling Layer
     We reduce memory usage by cutting C down to 2 dimensions.
     Before, we stored the output for each channel of the intermediate array to its own part of C, given that the array had a third dimension to store each channel.
     Now, we fuse the loop, so that we instead just rewrite C on each iteration of i (which is each channel), and write to the output array before moving on to the next channel.
-
+- Loop tiling
+    Reduce memory usage further by only writing portions of the C array at a time. We process only a tile of the C array at a time by tiling h and w.
