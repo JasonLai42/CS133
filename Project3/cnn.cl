@@ -15,9 +15,9 @@ void CnnKernel(__constant float* input, __constant float* weight,
   // your code goes here
 
   // Tile size to prevent out of resource
-  const int i_tile = 32;
-  const int h_tile = 4;
-  const int w_tile = 16;
+  const int i_tile = 64;
+  const int h_tile = 2;
+  const int w_tile = 32;
 
   // Get work group and work item indices
   const int gGCH = get_group_id(0), gGR = get_group_id(1), gGC = get_group_id(2);

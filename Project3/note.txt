@@ -33,3 +33,40 @@ Max Pooling Layer
     Now, we fuse the loop, so that we instead just rewrite C on each iteration of i (which is each channel), and write to the output array before moving on to the next channel.
 - Loop tiling
     Reduce memory usage further by only writing portions of the C array at a time. We process only a tile of the C array at a time by tiling h and w.
+
+
+Tests:
+1:
+    132.797 GFlops
+    135.765 GFlops
+    132.683 GFlops
+
+2:
+    138.886 GFlops
+    136.196 GFlops
+    136.807 GFlops
+
+4:
+    137.397 GFlops
+    141.189 GFlops
+    141.166 GFlops
+
+8:
+    140.632 GFlops
+    141.689 GFlops
+    142.773 GFlops
+
+16:
+    142.729 GFlops
+    142.765 GFlops
+    141.192 GFlops
+
+32:
+    141.344 GFlops
+    143.546 GFlops
+    143.856 GFlops
+
+64:
+    143.815 GFlops
+    144.491 GFlops
+    144.258 GFlops
