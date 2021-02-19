@@ -36,47 +36,71 @@ Max Pooling Layer
 
 
 Tests:
+Sequential
+    14.2738 s
+    11.5188 GFlops
+    14.2869 s
+    11.5083 GFlops
+    14.2691 s
+    11.5225 GFlops
+
 4 x 32
 '56 7'
 '4 1'
-    191.77 GFlops
-    190.342 GFlops
-    188.683 GFlops
+    0.868481 s
+    189.315 GFlops
+    0.868096 s
+    189.399 GFlops
+    0.868619 s
+    189.285 GFlops
 
 4 x 16
 '56 14'
 '4 2'
-    183.975 GFlops
-    183.488 GFlops
-    182.515 GFlops
+    0.90647 s
+    181.381 GFlops
+    0.907966 s
+    181.082 GFlops
+    0.914513 s
+    179.786 GFlops
 
 4 x 8
 '56 28'
 '4 4'
-    91.6593 GFlops
-    91.1012 GFlops
-    91.3293 GFlops
+    1.79938 s
+    91.3743 GFlops
+    1.81787 s
+    90.4445 GFlops
+    1.89362 s
+    86.8267 GFlops
 
 4 x 4
 '56 56'
 '4 8'
-    45.9411 GFlops
-    45.9159 GFlops
-    45.9918 GFlops
+    3.64899 s
+    45.0581 GFlops
+    3.63626 s
+    45.2159 GFlops
+    3.67188 s
+    44.7772 GFlops
 
 4 x 2
 '56 112'
 '4 16'
-    22.7137 GFlops
-    22.5103 GFlops
-    22.9142 GFlops
+    7.3416 s
+    22.3952 GFlops
+    7.3092 s
+    22.4945 GFlops
+    7.22553 s
+    22.755 GFlops
 
 2 x 2
 '112 112'
 '8 16'
-    22.1707 GFlops
-    22.3999 GFlops
-    22.401 GFlops
-
-    
+    7.40242 s
+    22.2112 GFlops
+    7.46604 s
+    22.0219 GFlops
+    7.43644 s
+    22.1096 GFlops
     

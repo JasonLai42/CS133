@@ -21,40 +21,42 @@ void CnnKernel(__constant float* input, __constant float* weight,
                __constant float* bias, __global float* output) {
   // your code goes here
 
-  // Tile size to prevent out of resource
+  // Tile sizes to assign to work groups
   const int i_tile = 8;
-  const int h_tile = 4;
+  const int h_tile = 16;
   const int w_tile = 32;
+
+  // Subtile sizes to assign to work items
+  const int h_subtile = 4;
+  const int w_subtile = 32;
 
   // Get work group and work item indices
   const int gGR = get_group_id(0), gGC = get_group_id(1);
   const int lR = get_local_id(0), lC = get_local_id(1);
 
   // Starting indices for rows/cols for the tiles assigned to each work group
-  const group_row_index = gGR * 16;
-  const group_col_index = gGC * 32;
+  const group_row_index = gGR * h_tile;
+  const group_col_index = gGC * w_tile;
 
   // Starting indices for the rows/cols for the subtiles assigned to each work item in each tile assigned to each work group
-  const item_row_index = lR * h_tile;
-  const item_col_index = lC * w_tile;
+  const item_row_index = lR * h_subtile;
+  const item_col_index = lC * w_subtile;
 
   // Intermediate image array to each handle a channel when unrolling i (same set of pixels, just different channels)
-  __local float c_access(h_tile,w_tile);
-  __local float d_access(h_tile,w_tile);
-  __local float e_access(h_tile,w_tile);
-  __local float f_access(h_tile,w_tile);
-  __local float g_access(h_tile,w_tile);
-  __local float h_access(h_tile,w_tile);
-  __local float i_access(h_tile,w_tile);
-  __local float j_access(h_tile,w_tile);
-
-
+  __local float c_access(h_subtile,w_subtile);
+  __local float d_access(h_subtile,w_subtile);
+  __local float e_access(h_subtile,w_subtile);
+  __local float f_access(h_subtile,w_subtile);
+  __local float g_access(h_subtile,w_subtile);
+  __local float h_access(h_subtile,w_subtile);
+  __local float i_access(h_subtile,w_subtile);
+  __local float j_access(h_subtile,w_subtile);
 
   for (int i = 0; i < kNum; i+=i_tile) { // Which of the 256 filters we're on
 
     // LOOP 1: Set bias for each channel
-    for(int hh = 0; hh < h_tile; hh++) {
-      for(int ww = 0; ww < w_tile; ww++) {
+    for(int hh = 0; hh < h_subtile; hh++) {
+      for(int ww = 0; ww < w_subtile; ww++) {
         c_access(hh,ww) = bias[i];
         d_access(hh,ww) = bias[i+1];
         e_access(hh,ww) = bias[i+2];
@@ -79,8 +81,8 @@ void CnnKernel(__constant float* input, __constant float* weight,
                 weight_h = weight_access(i+5,j,p,q), 
                 weight_i = weight_access(i+6,j,p,q), 
                 weight_j = weight_access(i+7,j,p,q);
-          for(int hh = 0; hh < h_tile; hh++) {
-            for(int ww = 0; ww < w_tile; ww+=16) {
+          for(int hh = 0; hh < h_subtile; hh++) {
+            for(int ww = 0; ww < w_subtile; ww+=16) {
               float16 input_vec = vload16(0, &input_access(j,((group_row_index + item_row_index) + hh + p),((group_col_index + item_col_index) + ww + q))), 
                           c_vec = vload16(0, &c_access(hh,ww)), 
                           d_vec = vload16(0, &d_access(hh,ww)),
@@ -106,8 +108,8 @@ void CnnKernel(__constant float* input, __constant float* weight,
 
 
     // LOOP 1 & 3: Add bias and do ReLU
-    for(int hh = 0; hh < h_tile; hh++) {
-      for(int ww = 0; ww < w_tile; ww++) {
+    for(int hh = 0; hh < h_subtile; hh++) {
+      for(int ww = 0; ww < w_subtile; ww++) {
         c_access(hh,ww) = max(0.f, c_access(hh,ww));
         d_access(hh,ww) = max(0.f, d_access(hh,ww));
         e_access(hh,ww) = max(0.f, e_access(hh,ww));
@@ -121,8 +123,8 @@ void CnnKernel(__constant float* input, __constant float* weight,
 
 
     // LOOP 4: Max pooling
-    for(int hh = 0; hh < h_tile/2; hh++) {
-      for(int ww = 0; ww < w_tile/2; ww++) {
+    for(int hh = 0; hh < h_subtile/2; hh++) {
+      for(int ww = 0; ww < w_subtile/2; ww++) {
         output_access(i,((group_row_index + item_row_index) / 2 + hh),((group_col_index + item_col_index) / 2 + ww)) = max(
           max(c_access((hh * 2),(ww * 2    )), c_access((hh * 2 + 1),(ww * 2    ))), 
           max(c_access((hh * 2),(ww * 2 + 1)), c_access((hh * 2 + 1),(ww * 2 + 1))));
