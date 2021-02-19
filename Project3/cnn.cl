@@ -26,6 +26,7 @@ void CnnKernel(__constant float* input, __constant float* weight,
   const int h_tile = 2;
   const int w_tile = 32;
 
+  // Get work group and work item indices
   const int gGR = get_group_id(0), gGC = get_group_id(1);
   const int lR = get_local_id(0), lC = get_local_id(1);
 
