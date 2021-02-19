@@ -36,37 +36,47 @@ Max Pooling Layer
 
 
 Tests:
-1:
-    132.797 GFlops
-    135.765 GFlops
-    132.683 GFlops
+4 x 32
+'56 7'
+'4 1'
+    191.77 GFlops
+    190.342 GFlops
+    188.683 GFlops
 
-2:
-    138.886 GFlops
-    136.196 GFlops
-    136.807 GFlops
+4 x 16
+'56 14'
+'4 2'
+    183.975 GFlops
+    183.488 GFlops
+    182.515 GFlops
 
-4:
-    137.397 GFlops
-    141.189 GFlops
-    141.166 GFlops
+4 x 8
+'56 28'
+'4 4'
+    91.6593 GFlops
+    91.1012 GFlops
+    91.3293 GFlops
 
-8:
-    140.632 GFlops
-    141.689 GFlops
-    142.773 GFlops
+4 x 4
+'56 56'
+'4 8'
+    45.9411 GFlops
+    45.9159 GFlops
+    45.9918 GFlops
 
-16:
-    142.729 GFlops
-    142.765 GFlops
-    141.192 GFlops
+4 x 2
+'56 112'
+'4 16'
+    22.7137 GFlops
+    22.5103 GFlops
+    22.9142 GFlops
 
-32:
-    141.344 GFlops
-    143.546 GFlops
-    143.856 GFlops
+2 x 2
+'112 112'
+'8 16'
+    22.1707 GFlops
+    22.3999 GFlops
+    22.401 GFlops
 
-64:
-    143.815 GFlops
-    144.491 GFlops
-    144.258 GFlops
+    
+    
