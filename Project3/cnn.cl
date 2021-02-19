@@ -65,8 +65,8 @@ for (int i = 0; i < kNum; i+=i_tile) { // Which of the 256 filters we're on
 
         // LOOP 2: Convolution
           for (int j = 0; j < kNum; ++j) { // Which of the 256 channels we're on
-            for (int p = 0; p < kKernel; ++p) { // Which row of the window/filter we're on
-              for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
+            for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
+              for (int p = 0; p < kKernel; ++p) { // Which row of the window/filter we're on
                 float weight_c = weight_access(i,j,p,q), 
                       weight_d = weight_access(i+1,j,p,q), 
                       weight_e = weight_access(i+2,j,p,q), 
