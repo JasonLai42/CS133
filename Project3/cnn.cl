@@ -22,7 +22,7 @@ void CnnKernel(__constant float* input, __constant float* weight,
   // your code goes here
 
   // Tile size to prevent out of resource
-  const int i_tile = 16;
+  const int i_tile = 8;
   const int h_tile = 2;
   const int w_tile = 32;
 
@@ -45,7 +45,7 @@ void CnnKernel(__constant float* input, __constant float* weight,
 
 
 
-for (int i = 0; i < kNum; i+=8) { // Which of the 256 filters we're on
+for (int i = 0; i < kNum; i+=i_tile) { // Which of the 256 filters we're on
 
         // LOOP 1: Set bias for each channel
           for(int hh = 0; hh < h_tile; hh++) {
