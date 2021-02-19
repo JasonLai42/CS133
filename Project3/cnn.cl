@@ -15,6 +15,7 @@ void CnnKernel(__constant float* input, __constant float* weight,
                __constant float* bias, __global float* output) {
   // your code goes here
 
+  // Tile size to prevent out of resource
   const int i_tile = 16;
   const int h_tile = 8;
   const int w_tile = 32;
