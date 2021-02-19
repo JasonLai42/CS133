@@ -6,6 +6,8 @@ __constant int kOutImSize = 112;
 
 #define c_access(y,z) C[(y)*kImSize+(z)]
 #define d_access(y,z) D[(y)*kImSize+(z)]
+#define e_access(y,z) E[(y)*kImSize+(z)]
+#define f_access(y,z) F[(y)*kImSize+(z)]
 #define weight_access(w,x,y,z) weight[(w)*kNum*kKernel*kKernel+(x)*kKernel*kKernel+(y)*kKernel+(z)]
 #define input_access(x,y,z) input[(x)*kInImSize*kInImSize+(y)*kInImSize+(z)]
 #define output_access(x,y,z) output[(x)*kOutImSize*kOutImSize+(y)*kOutImSize+(z)]
@@ -17,7 +19,7 @@ void CnnKernel(__constant float* input, __constant float* weight,
 
   // Tile size to prevent out of resource
   const int i_tile = 16;
-  const int h_tile = 8;
+  const int h_tile = 4;
   const int w_tile = 32;
 
   // const int gGR = get_group_id(0), gGC = get_group_id(1);
@@ -27,16 +29,20 @@ void CnnKernel(__constant float* input, __constant float* weight,
   // Intermediate image array
   __local float c_access(h_tile,w_tile);
   __local float d_access(h_tile,w_tile);
+  __local float e_access(h_tile,w_tile);
+  __local float f_access(h_tile,w_tile);
 
 for (int h = 0; h < kImSize; h += h_tile) {
   for (int w = 0; w < kImSize; w += w_tile) {
-    for (int i = 0; i < kNum; i+=2) { // Which of the 256 filters we're on
+    for (int i = 0; i < kNum; i+=4) { // Which of the 256 filters we're on
 
         // LOOP 1: Set bias for each channel
           for(int hh = 0; hh < h_tile; hh++) {
             for(int ww = 0; ww < w_tile; ww++) {
               c_access(hh,ww) = bias[i];
               d_access(hh,ww) = bias[i+1];
+              e_access(hh,ww) = bias[i+2];
+              f_access(hh,ww) = bias[i+3];
             }
           }
 
@@ -45,15 +51,21 @@ for (int h = 0; h < kImSize; h += h_tile) {
           for (int j = 0; j < kNum; ++j) { // Which of the 256 channels we're on
             for (int p = 0; p < kKernel; ++p) { // Which row of the window/filter we're on
               for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
-                float weight_c = weight_access(i,j,p,q);
-                float weight_d = weight_access(i+1,j,p,q);
+                float weight_c = weight_access(i,j,p,q), 
+                      weight_d = weight_access(i+1,j,p,q), 
+                      weight_e = weight_access(i+2,j,p,q), 
+                      weight_f = weight_access(i+3,j,p,q);
                 for(int hh = 0; hh < h_tile; hh++) {
                   for(int ww = 0; ww < w_tile; ww+=16) {
                     float16 input_vec = vload16(0, &input_access(j,(h + hh + p),(w + ww + q))), 
                                 c_vec = vload16(0, &c_access(hh,ww)), 
-                                d_vec = vload16(0, &d_access(hh,ww));
+                                d_vec = vload16(0, &d_access(hh,ww)),
+                                e_vec = vload16(0, &e_access(hh,ww)),
+                                f_vec = vload16(0, &f_access(hh,ww));
                     vstore16((c_vec + (input_vec * weight_c)), 0, &c_access(hh,ww));
                     vstore16((d_vec + (input_vec * weight_d)), 0, &d_access(hh,ww));
+                    vstore16((e_vec + (input_vec * weight_e)), 0, &e_access(hh,ww));
+                    vstore16((f_vec + (input_vec * weight_f)), 0, &f_access(hh,ww));
                   }
                 }
               }
@@ -66,6 +78,8 @@ for (int h = 0; h < kImSize; h += h_tile) {
             for(int ww = 0; ww < w_tile; ww++) {
               c_access(hh,ww) = max(0.f, c_access(hh,ww));
               d_access(hh,ww) = max(0.f, d_access(hh,ww));
+              e_access(hh,ww) = max(0.f, e_access(hh,ww));
+              f_access(hh,ww) = max(0.f, f_access(hh,ww));
             }
           }
 
@@ -79,6 +93,12 @@ for (int h = 0; h < kImSize; h += h_tile) {
               output_access(i+1,(h / 2 + hh),(w / 2 + ww)) = max(
                 max(d_access((hh * 2),(ww * 2    )), d_access((hh * 2 + 1),(ww * 2    ))), 
                 max(d_access((hh * 2),(ww * 2 + 1)), d_access((hh * 2 + 1),(ww * 2 + 1))));
+              output_access(i+2,(h / 2 + hh),(w / 2 + ww)) = max(
+                max(e_access((hh * 2),(ww * 2    )), e_access((hh * 2 + 1),(ww * 2    ))), 
+                max(e_access((hh * 2),(ww * 2 + 1)), e_access((hh * 2 + 1),(ww * 2 + 1))));
+              output_access(i+3,(h / 2 + hh),(w / 2 + ww)) = max(
+                max(f_access((hh * 2),(ww * 2    )), f_access((hh * 2 + 1),(ww * 2    ))), 
+                max(f_access((hh * 2),(ww * 2 + 1)), f_access((hh * 2 + 1),(ww * 2 + 1))));
             }
           }
           
