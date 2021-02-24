@@ -52,6 +52,15 @@ void CnnKernel(__constant float* input, __constant float* weight,
                 weight_f = weight_access(i+3,j,p,q);
           for(int hh = 0; hh < h_subtile; hh++) {
             for(int ww = 0; ww < w_subtile; ww++) {
+              // float16 input_vec = vload16(0, &input_access(j,((group_row_index + item_row_index) + hh + p),((group_col_index + item_col_index) + ww + q))), 
+              //             c_vec = vload16(0, &c_access(0,hh,ww)), 
+              //             d_vec = vload16(0, &c_access(1,hh,ww)),
+              //             e_vec = vload16(0, &c_access(2,hh,ww)),
+              //             f_vec = vload16(0, &c_access(3,hh,ww));
+              // vstore16((c_vec + (input_vec * weight_c)), 0, &c_access(0,hh,ww));
+              // vstore16((d_vec + (input_vec * weight_d)), 0, &c_access(1,hh,ww));
+              // vstore16((e_vec + (input_vec * weight_e)), 0, &c_access(2,hh,ww));
+              // vstore16((f_vec + (input_vec * weight_f)), 0, &c_access(3,hh,ww));
               c_access(0,hh,ww) += weight_c * input_access(j,((group_row_index + item_row_index) + hh + p),((group_col_index + item_col_index) + ww + q));
               c_access(1,hh,ww) += weight_d * input_access(j,((group_row_index + item_row_index) + hh + p),((group_col_index + item_col_index) + ww + q));
               c_access(2,hh,ww) += weight_e * input_access(j,((group_row_index + item_row_index) + hh + p),((group_col_index + item_col_index) + ww + q));
