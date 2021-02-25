@@ -1,0 +1,2 @@
+If more work per item, divide the GLOBAL_SIZE (less total threads, means each thread does more)
+If more work per group, increase LOCAL_SIZE (more threads per group, means more work done per group)
