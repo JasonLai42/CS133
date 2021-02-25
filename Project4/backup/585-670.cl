@@ -5,12 +5,12 @@
 #define kOutImSize 112
 
 // Tile sizes to assign to work groups
-#define i_tile 32
+#define i_tile 16
 #define h_tile 8
 #define w_tile 32
 
 // Subtile sizes to assign to work items
-#define i_subtile 8
+#define i_subtile 4
 #define h_subtile 2
 #define w_subtile 8
 
@@ -55,21 +55,13 @@ void CnnKernel(__constant float* input, __constant float* weight,
           float weight_c = weight_access(item_channel_index,j,p,q), 
                 weight_d = weight_access(item_channel_index+1,j,p,q), 
                 weight_e = weight_access(item_channel_index+2,j,p,q), 
-                weight_f = weight_access(item_channel_index+3,j,p,q),
-                weight_g = weight_access(item_channel_index+4,j,p,q), 
-                weight_h = weight_access(item_channel_index+5,j,p,q), 
-                weight_i = weight_access(item_channel_index+6,j,p,q), 
-                weight_j = weight_access(item_channel_index+7,j,p,q);
+                weight_f = weight_access(item_channel_index+3,j,p,q);
           for(int hh = 0; hh < h_subtile; hh++) {
             for(int ww = 0; ww < w_subtile; ww++) {
               c_access(0,hh,ww) += weight_c * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
               c_access(1,hh,ww) += weight_d * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
               c_access(2,hh,ww) += weight_e * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
               c_access(3,hh,ww) += weight_f * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
-              c_access(4,hh,ww) += weight_g * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
-              c_access(5,hh,ww) += weight_h * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
-              c_access(6,hh,ww) += weight_i * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
-              c_access(7,hh,ww) += weight_j * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
             }
           }
         }
@@ -84,10 +76,6 @@ void CnnKernel(__constant float* input, __constant float* weight,
         c_access(1,hh,ww) = max(0.f, c_access(1,hh,ww) + bias[item_channel_index+1]);
         c_access(2,hh,ww) = max(0.f, c_access(2,hh,ww) + bias[item_channel_index+2]);
         c_access(3,hh,ww) = max(0.f, c_access(3,hh,ww) + bias[item_channel_index+3]);
-        c_access(4,hh,ww) = max(0.f, c_access(4,hh,ww) + bias[item_channel_index+4]);
-        c_access(5,hh,ww) = max(0.f, c_access(5,hh,ww) + bias[item_channel_index+5]);
-        c_access(6,hh,ww) = max(0.f, c_access(6,hh,ww) + bias[item_channel_index+6]);
-        c_access(7,hh,ww) = max(0.f, c_access(7,hh,ww) + bias[item_channel_index+7]);
       }
     }
 
@@ -107,18 +95,6 @@ void CnnKernel(__constant float* input, __constant float* weight,
         output_access(item_channel_index+3,(item_row_index / 2 + hh),(item_col_index / 2 + ww)) = max(
           max(c_access(3,(hh * 2),(ww * 2    )), c_access(3,(hh * 2 + 1),(ww * 2    ))), 
           max(c_access(3,(hh * 2),(ww * 2 + 1)), c_access(3,(hh * 2 + 1),(ww * 2 + 1))));
-        output_access(item_channel_index+4,(item_row_index / 2 + hh),(item_col_index / 2 + ww)) = max(
-          max(c_access(4,(hh * 2),(ww * 2    )), c_access(4,(hh * 2 + 1),(ww * 2    ))), 
-          max(c_access(4,(hh * 2),(ww * 2 + 1)), c_access(4,(hh * 2 + 1),(ww * 2 + 1))));
-        output_access(item_channel_index+5,(item_row_index / 2 + hh),(item_col_index / 2 + ww)) = max(
-          max(c_access(5,(hh * 2),(ww * 2    )), c_access(5,(hh * 2 + 1),(ww * 2    ))), 
-          max(c_access(5,(hh * 2),(ww * 2 + 1)), c_access(5,(hh * 2 + 1),(ww * 2 + 1))));
-        output_access(item_channel_index+6,(item_row_index / 2 + hh),(item_col_index / 2 + ww)) = max(
-          max(c_access(6,(hh * 2),(ww * 2    )), c_access(6,(hh * 2 + 1),(ww * 2    ))), 
-          max(c_access(6,(hh * 2),(ww * 2 + 1)), c_access(6,(hh * 2 + 1),(ww * 2 + 1))));
-        output_access(item_channel_index+7,(item_row_index / 2 + hh),(item_col_index / 2 + ww)) = max(
-          max(c_access(7,(hh * 2),(ww * 2    )), c_access(7,(hh * 2 + 1),(ww * 2    ))), 
-          max(c_access(7,(hh * 2),(ww * 2 + 1)), c_access(7,(hh * 2 + 1),(ww * 2 + 1))));
       }
     }
     
