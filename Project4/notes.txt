@@ -1,2 +1,20 @@
 If more work per item, divide the GLOBAL_SIZE (less total threads, means each thread does more)
 If more work per group, increase LOCAL_SIZE (more threads per group, means more work done per group)
+
+Possible GLOBAL_SIZE (Possible LOCAL_SIZE)
+
+256 (256, 128, 64, 32, 16, 8, 4, 2, 1)          112 (112, 56, 28, 16, 14, 8, 7, 4, 2, 1)            112 (112, 56, 28, 16, 14, 8, 7, 4, 2, 1)
+
+128 (128, 64, 32, 16, 8, 4, 2, 1)               56 (56, 28, 14, 8, 7, 4, 2, 1)                      56 (56, 28, 14, 8, 7, 4, 2, 1)
+
+64 (64, 32, 16, 8, 4, 2, 1)                     28 (28, 14, 7, 4, 2, 1)                             28 (28, 14, 7, 4, 2, 1)
+
+32 (32, 16, 8, 4, 2, 1)                         16 (16, 8, 4, 2, 1)                                 16 (16, 8, 4, 2, 1)
+
+16 (16, 8, 4, 2, 1)                             14 (14, 7, 2, 1)                                    14 (14, 7, 2, 1)
+
+8 (8, 4, 2, 1)                                  8 (8, 4, 2, 1)                                      8 (8, 4, 2, 1)
+
+4 (4, 2, 1)                                     4 (4, 2, 1)                                         4 (4, 2, 1)
+
+2 (2, 1)                                        2 (2, 1)                                            2 (2, 1)
