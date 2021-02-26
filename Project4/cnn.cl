@@ -15,8 +15,6 @@
 #define w_subtile 8 // should be equal to (224 / GLOBAL_SIZE[2])
 
 // Arrays accessors
-// #define c_init(y,z) C[(y)*w_tile+(z)] __attribute__((aligned(32 * sizeof(float))))
-// #define c_access(y,z) C[(y)*w_tile+(z)]
 #define c_init(x,y,z) C[(x)*w_tile*w_tile+(y)*w_tile+(z)] __attribute__((aligned(32 * sizeof(float))))
 #define c_access(x,y,z) C[(x)*w_tile*w_tile+(y)*w_tile+(z)]
 #define weight_access(w,x,y,z) weight[(w)*kNum*kKernel*kKernel+(x)*kKernel*kKernel+(y)*kKernel+(z)]
