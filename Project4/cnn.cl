@@ -6,8 +6,8 @@
 
 // Tile sizes to assign to work groups
 #define i_tile 32   // should be equal to (LOCAL_SIZE[0] * i_subtile)
-#define h_tile 8    // should be equal to (LOCAL_SIZE[1] * h_subtile)
-#define w_tile 32   // should be equal to (LOCAL_SIZE[2] * w_subtile)
+#define h_tile 32   // should be equal to (LOCAL_SIZE[1] * h_subtile)
+#define w_tile 16   // should be equal to (LOCAL_SIZE[2] * w_subtile)
 
 // Subtile sizes to assign to work items
 #define i_subtile 8 // should be equal to (256 / GLOBAL_SIZE[0])
@@ -46,11 +46,11 @@ void CnnKernel(__constant float* input, __constant float* weight,
   // LOOP 2: Convolution
   for (int j = 0; j < kNum; ++j) { // Which of the 256 channels we're on
     for (int p = 0; p < kKernel; ++p) { // Which row of the window/filter we're on
-      for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
-        for(int hh = 0; hh < h_subtile; hh++) {
-          for(int ww = 0; ww < w_subtile; ww++) {
-            #pragma unroll i_subtile
-            for(int i = 0; i < i_subtile; i++) {
+      #pragma unroll i_subtile
+      for(int i = 0; i < i_subtile; i++) {
+        for(int ww = 0; ww < w_subtile; ww++) {
+          for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
+            for(int hh = 0; hh < h_subtile; hh++) {
               c_access(i,hh,ww) += weight_access(item_channel_index + i,j,p,q) * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
             }
           }

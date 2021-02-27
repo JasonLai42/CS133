@@ -31,3 +31,72 @@ hh j p q ww 304
 j p ww q hh 314
 j p q ww hh 224
 q j ww p hh 205
+
+BEST
+
+j p ww q hh 314
+
+    NOTE: export OPENCL_WORKGROUP_GLOBAL='32 112 28'
+          export OPENCL_WORKGROUP_LOCAL='2 16 4'
+    gives 1456 perf
+
+    NOTE: export OPENCL_WORKGROUP_GLOBAL='32 112 28'
+          export OPENCL_WORKGROUP_LOCAL='4 16 2'
+    gives 1554 perf
+
+    j p PRAGMA ww q hh 1360
+
+
+REJECTED
+
+j p ww hh q 321
+
+    NOTE: export OPENCL_WORKGROUP_GLOBAL='32 112 28'
+          export OPENCL_WORKGROUP_LOCAL='2 16 4'
+    gives 1458 perf
+
+    NOTE: export OPENCL_WORKGROUP_GLOBAL='32 112 28'
+          export OPENCL_WORKGROUP_LOCAL='4 16 2'
+    gives 1555 perf
+
+    j p PRAGMA ww hh q 1351
+
+j p hh ww q 340
+
+    NOTE: export OPENCL_WORKGROUP_GLOBAL='32 112 28'
+          export OPENCL_WORKGROUP_LOCAL='4 16 2'
+    gives 1397 perf
+
+    j p PRAGMA hh ww q 1174
+
+q j hh ww p 219
+
+    NOTE: export OPENCL_WORKGROUP_GLOBAL='32 112 28'
+          export OPENCL_WORKGROUP_LOCAL='4 16 2'
+    gives 1352 perf
+
+    q j PRAGMA hh ww p 1121
+
+j p q hh ww 287
+
+    NOTE: export OPENCL_WORKGROUP_GLOBAL='32 112 28'
+          export OPENCL_WORKGROUP_LOCAL='4 16 2'
+    gives 1516 perf
+
+    j p PRAGMA q hh ww 1282
+
+j p hh q ww 309
+
+    NOTE: export OPENCL_WORKGROUP_GLOBAL='32 112 28'
+          export OPENCL_WORKGROUP_LOCAL='4 16 2'
+    gives 1279 perf
+
+    j p PRAGMA hh q ww 1086
+
+j p q ww hh 224
+
+    NOTE: export OPENCL_WORKGROUP_GLOBAL='32 112 28'
+          export OPENCL_WORKGROUP_LOCAL='4 16 2'
+    gives 1543 perf
+
+    j p PRAGMA q ww hh 1302
