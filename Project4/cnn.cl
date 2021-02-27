@@ -45,8 +45,8 @@ void CnnKernel(__constant float* input, __constant float* weight,
 
   // LOOP 2: Convolution
   for (int j = 0; j < kNum; ++j) { // Which of the 256 channels we're on
-    for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
-      for (int p = 0; p < kKernel; ++p) { // Which row of the window/filter we're on
+    for (int p = 0; p < kKernel; ++p) { // Which row of the window/filter we're on
+      for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
         for(int hh = 0; hh < h_subtile; hh++) {
           for(int ww = 0; ww < w_subtile; ww++) {
             #pragma unroll i_subtile
