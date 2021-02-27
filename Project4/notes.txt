@@ -18,3 +18,16 @@ Possible GLOBAL_SIZE (Possible LOCAL_SIZE)
 4 (4, 2, 1)                                     4 (4, 2, 1)                                         4 (4, 2, 1)
 
 2 (2, 1)                                        2 (2, 1)                                            2 (2, 1)
+
+j p ww hh q 321
+j p hh ww q 340
+hh j p ww q 306
+j hh p ww q 328
+q j hh ww p 219
+j p q hh ww 287
+j p hh q ww 309
+j hh p q ww 342
+hh j p q ww 304
+j p ww q hh 314
+j p q ww hh 224
+q j ww p hh 205
