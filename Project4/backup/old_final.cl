@@ -43,15 +43,22 @@ void CnnKernel(__constant float* input, __constant float* weight,
   // Intermediate image array to each handle a channel when unrolling i (same set of pixels, just different channels)
   __private float c_init(i_subtile,h_subtile,w_subtile) = {{{ 0 }}};
 
+  // Array to hold weights (filters) for unrolling
+  __local float curr_weights[i_subtile];
+
   // LOOP 2: Convolution
   for (int j = 0; j < kNum; ++j) { // Which of the 256 channels we're on
     for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
       for (int p = 0; p < kKernel; ++p) { // Which row of the window/filter we're on
+        #pragma unroll i_subtile
+        for(int k = 0; k < i_subtile; k++) {
+          curr_weights[k] = weight_access(item_channel_index + k,j,p,q);
+        }
         for(int hh = 0; hh < h_subtile; hh++) {
           for(int ww = 0; ww < w_subtile; ww++) {
             #pragma unroll i_subtile
             for(int i = 0; i < i_subtile; i++) {
-              c_access(i,hh,ww) += weight_access(item_channel_index + i,j,p,q) * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
+              c_access(i,hh,ww) += curr_weights[i] * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
             }
           }
         }
