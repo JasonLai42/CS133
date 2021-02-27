@@ -5,7 +5,7 @@
 #define kOutImSize 112
 
 // Tile sizes to assign to work groups
-#define i_tile 32   // should be equal to (LOCAL_SIZE[0] * i_subtile)
+#define i_tile 16   // should be equal to (LOCAL_SIZE[0] * i_subtile)
 #define h_tile 16   // should be equal to (LOCAL_SIZE[1] * h_subtile)
 #define w_tile 16   // should be equal to (LOCAL_SIZE[2] * w_subtile)
 
