@@ -59,26 +59,21 @@ void CnnKernel(__constant float* input, __constant float* weight,
     }
   }
 
-
-  // LOOP 1 & 3: Add bias and do ReLU
-  for(int hh = 0; hh < h_subtile; hh++) {
-    for(int ww = 0; ww < w_subtile; ww++) {
-      #pragma unroll i_subtile
-      for(int i = 0; i < i_subtile; i++) {
-        c_access(i,hh,ww) = max(0.f, c_access(i,hh,ww) + bias[item_channel_index + i]);
-      }
-    }
-  }
-
-
-  // LOOP 4: Max pooling
+  // LOOP 1, 3, & 4: Bias, ReLU, & Max pooling
   for(int hh = 0; hh < h_subtile/2; hh++) {
     for(int ww = 0; ww < w_subtile/2; ww++) {
       #pragma unroll i_subtile
       for(int i = 0; i < i_subtile; i++) {
         output_access((item_channel_index + i),(item_row_index / 2 + hh),(item_col_index / 2 + ww)) = max(
-          max(c_access(i,(hh * 2),(ww * 2    )), c_access(i,(hh * 2 + 1),(ww * 2    ))), 
-          max(c_access(i,(hh * 2),(ww * 2 + 1)), c_access(i,(hh * 2 + 1),(ww * 2 + 1))));
+          max(
+            max(0.f, (c_access(i,(hh * 2),(ww * 2    )) + bias[item_channel_index + i])), 
+            max(0.f, (c_access(i,(hh * 2 + 1),(ww * 2    )) + bias[item_channel_index + i]))
+          ), 
+          max(
+            max(0.f, (c_access(i,(hh * 2),(ww * 2 + 1)) + bias[item_channel_index + i])), 
+            max(0.f, (c_access(i,(hh * 2 + 1),(ww * 2 + 1)) + bias[item_channel_index + i]))
+          )
+        );
       }
     }
   }
