@@ -5,14 +5,14 @@
 #define kOutImSize 112
 
 // Tile sizes to assign to work groups
-#define i_tile 16   // should be equal to (LOCAL_SIZE[0] * i_subtile)
-#define h_tile 16   // should be equal to (LOCAL_SIZE[1] * h_subtile)
-#define w_tile 16   // should be equal to (LOCAL_SIZE[2] * w_subtile)
+#define i_tile 16     // should be equal to (LOCAL_SIZE[0] * i_subtile)
+#define h_tile 16     // should be equal to (LOCAL_SIZE[1] * h_subtile)
+#define w_tile 28     // should be equal to (LOCAL_SIZE[2] * w_subtile)
 
 // Subtile sizes to assign to work items
-#define i_subtile 8 // should be equal to (256 / GLOBAL_SIZE[0])
-#define h_subtile 2 // should be equal to (224 / GLOBAL_SIZE[1])
-#define w_subtile 8 // should be equal to (224 / GLOBAL_SIZE[2])
+#define i_subtile 4   // should be equal to (256 / GLOBAL_SIZE[0])
+#define h_subtile 2   // should be equal to (224 / GLOBAL_SIZE[1])
+#define w_subtile 14  // should be equal to (224 / GLOBAL_SIZE[2])
 
 // Arrays accessors
 #define c_init(x,y,z) C[(x)*w_tile*w_tile+(y)*w_tile+(z)] __attribute__((aligned(32 * sizeof(float))))
