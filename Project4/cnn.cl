@@ -26,19 +26,10 @@ void CnnKernel(__constant float* input, __constant float* weight,
                __constant float* bias, __global float* output) {
   // your code goes here
 
-  // Get work group and work item indices
-  const int gGCH = get_group_id(0), gGR = get_group_id(1), gGC = get_group_id(2);
-  const int lCH = get_local_id(0), lR = get_local_id(1), lC = get_local_id(2);
-
-  // Starting indices for rows/cols for the tiles assigned to each work group
-  const int group_channel_index = gGCH * i_tile;
-  const int group_row_index = gGR * h_tile;
-  const int group_col_index = gGC * w_tile;
-
   // Starting indices for rows/cols for the subtiles assigned to each work group
-  const int item_channel_index = group_channel_index + (lCH * i_subtile);
-  const int item_row_index = group_row_index + (lR * h_subtile);
-  const int item_col_index = group_col_index + (lC * w_subtile);
+  const int item_channel_index = (((get_global_id(0) - get_local_id(0)) / get_local_size(0)) * i_tile) + (get_local_id(0) * i_subtile);
+  const int item_row_index = (((get_global_id(1) - get_local_id(1)) / get_local_size(1)) * h_tile) + (get_local_id(1) * h_subtile);
+  const int item_col_index = (((get_global_id(2) - get_local_id(2)) / get_local_size(2)) * w_tile) + (get_local_id(2) * w_subtile);
 
   // Intermediate image array to each handle a channel when unrolling i (same set of pixels, just different channels)
   __private float c_init(i_subtile,h_subtile,w_subtile);
