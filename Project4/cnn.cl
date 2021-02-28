@@ -48,8 +48,8 @@ void CnnKernel(__constant float* input, __constant float* weight,
     for (int p = 0; p < kKernel; ++p) { // Which row of the window/filter we're on
       #pragma unroll i_subtile
       for(int i = 0; i < i_subtile; i++) {
-        for(int ww = 0; ww < w_subtile; ww++) {
-          for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
+        for (int q = 0; q < kKernel; ++q) { // Which column of the window/filter we're on
+          for(int ww = 0; ww < w_subtile; ww++) {
             for(int hh = 0; hh < h_subtile; hh++) {
               c_access(i,hh,ww) += weight_access(item_channel_index + i,j,p,q) * input_access(j,(item_row_index + hh + p),(item_col_index + ww + q));
             }
