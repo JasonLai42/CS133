@@ -41,7 +41,17 @@ void CnnKernel(__constant float* input, __constant float* weight,
   const int item_col_index = group_col_index + (lC * w_subtile);
 
   // Intermediate image array to each handle a channel when unrolling i (same set of pixels, just different channels)
-  __private float c_init(i_subtile,h_subtile,w_subtile) = {{{ 0 }}};
+  __private float c_init(i_subtile,h_subtile,w_subtile);
+
+  // LOOP 1: Bias
+  for(int hh = 0; hh < h_subtile; hh++) {
+    for(int ww = 0; ww < w_subtile; ww++) {
+      #pragma unroll i_subtile
+      for(int i = 0; i < i_subtile; i++) {
+        c_access(i,hh,ww) = bias[item_channel_index + i];
+      }
+    }
+  }
 
   // LOOP 2: Convolution
   for (int j = 0; j < kNum; ++j) { // Which of the 256 channels we're on
@@ -59,21 +69,24 @@ void CnnKernel(__constant float* input, __constant float* weight,
     }
   }
 
-  // LOOP 1, 3, & 4: Bias, ReLU, & Max pooling
+  // LOOP 3: ReLU
+  for(int hh = 0; hh < h_subtile; hh++) {
+    for(int ww = 0; ww < w_subtile; ww++) {
+      #pragma unroll i_subtile
+      for(int i = 0; i < i_subtile; i++) {
+        c_access(i,hh,ww) = max(0.f, c_access(i,hh,ww));
+      }
+    }
+  }
+
+  // LOOP 4: Max pooling
   for(int hh = 0; hh < h_subtile/2; hh++) {
     for(int ww = 0; ww < w_subtile/2; ww++) {
       #pragma unroll i_subtile
       for(int i = 0; i < i_subtile; i++) {
         output_access((item_channel_index + i),(item_row_index / 2 + hh),(item_col_index / 2 + ww)) = max(
-          max(
-            max(0.f, (c_access(i,(hh * 2),(ww * 2    )) + bias[item_channel_index + i])), 
-            max(0.f, (c_access(i,(hh * 2 + 1),(ww * 2    )) + bias[item_channel_index + i]))
-          ), 
-          max(
-            max(0.f, (c_access(i,(hh * 2),(ww * 2 + 1)) + bias[item_channel_index + i])), 
-            max(0.f, (c_access(i,(hh * 2 + 1),(ww * 2 + 1)) + bias[item_channel_index + i]))
-          )
-        );
+          max(c_access(i,(hh * 2),(ww * 2    )), c_access(i,(hh * 2 + 1),(ww * 2    ))), 
+          max(c_access(i,(hh * 2),(ww * 2 + 1)), c_access(i,(hh * 2 + 1),(ww * 2 + 1))));
       }
     }
   }
