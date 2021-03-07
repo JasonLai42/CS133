@@ -18,8 +18,8 @@ void CnnKernel_YourCode(
   static compute_t C[kTileH][kTileW];
 
   // TODO:  You may want to add array partitioning here, e.g.:
-  #pragma HLS array_partition variable=bias factor=56 cyclic
-  #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
+  #pragma HLS array_partition variable=bias complete
+  #pragma HLS array_partition variable=weight dim=4 complete
   #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
 
   // Read the whole arrays from memory to device
@@ -55,11 +55,11 @@ void CnnKernel_YourCode(
         // Convolution
         conv:
         for (int j = 0; j < kNum; ++j) {
-          for (int h = 0; h < kTileH; ++h) {
-            for (int w = 0; w < kTileW; ++w) {
-              for (int p = 0; p < kKernel; ++p) {
+          for (int p = 0; p < kKernel; ++p) {
+            for (int q = 0; q < kKernel; ++q) {
+              for (int w = 0; w < kTileW; ++w) {
                 #pragma HLS unroll
-                for (int q = 0; q < kKernel; ++q) {
+                for (int h = 0; h < kTileH; ++h) {
                   #pragma HLS unroll
                   C[h][w] += weight[i][j][p][q] *
                              input[j][h + p][w + q];
