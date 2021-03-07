@@ -44,8 +44,10 @@ void CnnKernel_YourCode(
         // Set bias
         set_bias:
         for (int h = 0; h < kTileH; ++h) {
-          for (int w = 0; w < kTileW; ++w)
+          for (int w = 0; w < kTileW; ++w) {
+            #pragma HLS unroll
             C[h][w] = bias[i];
+          }
         }
 
         // Convolution
@@ -54,9 +56,12 @@ void CnnKernel_YourCode(
           for (int h = 0; h < kTileH; ++h) {
             for (int w = 0; w < kTileW; ++w) {
               for (int p = 0; p < kKernel; ++p) {
-                for (int q = 0; q < kKernel; ++q)
+                #pragma HLS unroll
+                for (int q = 0; q < kKernel; ++q) {
+                  #pragma HLS unroll
                   C[h][w] += weight[i][j][p][q] *
                              input[j][h + p][w + q];
+                }
               }
             }
           }
@@ -66,6 +71,7 @@ void CnnKernel_YourCode(
         relu:
         for (int h = 0; h < kTileH; ++h) {
           for (int w = 0; w < kTileW; ++w) {
+            #pragma HLS unroll
             if (C[h][w] < 0) C[h][w] = 0;
           }
         }
@@ -74,6 +80,7 @@ void CnnKernel_YourCode(
         maxpool:
         for (int h = 0; h < kTileH/2; ++h) {
           for (int w = 0; w < kTileW/2; ++w) {
+            #pragma HLS unroll
             output[i][h][w] = max(
                 max(C[h * 2][w * 2    ], C[h * 2 + 1][w * 2    ]),
                 max(C[h * 2][w * 2 + 1], C[h * 2 + 1][w * 2 + 1]));
