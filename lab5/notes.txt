@@ -1,0 +1,12 @@
+Things to remember:
+    - Every time we log on to instance: cd $AWS_FPGA_REPO_DIR && source vitis_setup.sh && cd
+    - 164.4/max = performance in GFLOPs
+    - Make sure make estimate doesn't take longer than 12 hours (or even 20 minutes ideally)
+    - Keep applying optimization until your kernel occupies about 80% of these resources (make resource)
+
+Things to try:
+    - Specify #pragma HLS inline off inside the function body to reduce synthesis time
+    - Need to implement pipeline and unrolls
+        - Mess with array partitioning
+    - LOOP TRANSFORMATIONS
+    - Use make resource to check memory usage; perhaps change tile sizes at the top for C

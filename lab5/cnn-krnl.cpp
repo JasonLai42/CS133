@@ -18,7 +18,9 @@ void CnnKernel_YourCode(
   static compute_t C[kTileH][kTileW];
 
   // TODO:  You may want to add array partitioning here, e.g.:
-  // #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
+  #pragma HLS array_partition variable=bias factor=56 cyclic
+  #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
+  #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
 
   // Read the whole arrays from memory to device
   read_weight_from_memory(weight_g, weight);
