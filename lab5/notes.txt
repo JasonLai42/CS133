@@ -7,7 +7,7 @@ Things to remember:
 Things to try:
     - Specify #pragma HLS inline off inside the function body to reduce synthesis time
     - Need to implement pipeline and unrolls
-        - Mess with array partitioning
+        - For pipeline, create pipelined functions
     - LOOP TRANSFORMATIONS
     - Sliding window
     - Reduction

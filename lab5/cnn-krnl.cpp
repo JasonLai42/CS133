@@ -17,6 +17,11 @@ void CnnKernel_YourCode(
 
   static compute_t C[kTileH][kTileW];
 
+  int k = -1;
+  int old_k = 0;
+  input_t input_window[kKernel-1][kKernel];
+  #pragma HLS array_partition variable=input_window dim=0 complete
+
   // TODO:  You may want to add array partitioning here, e.g.:
   #pragma HLS array_partition variable=bias factor=56 cyclic
   #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
@@ -47,7 +52,6 @@ void CnnKernel_YourCode(
         set_bias:
         for (int h = 0; h < kTileH; ++h) {
           for (int w = 0; w < kTileW; ++w) {
-            #pragma HLS unroll
             C[h][w] = bias[i];
           }
         }
@@ -55,16 +59,30 @@ void CnnKernel_YourCode(
         // Convolution
         conv:
         for (int j = 0; j < kNum; ++j) {
+          // Initialize sliding window for this channel j
+          for (int u = 0; u < kKernel-1; ++u) {
+            for (int v = 0; v < kKernel; ++v) {
+              input_window[u][v] = input[j][u][v];
+            }
+          }
           for (int h = 0; h < kTileH; ++h) {
             for (int w = 0; w < kTileW; ++w) {
               for (int p = 0; p < kKernel; ++p) {
-                #pragma HLS unroll
+                k++;
                 for (int q = 0; q < kKernel; ++q) {
-                  #pragma HLS unroll
-                  C[h][w] += weight[i][j][p][q] *
-                             input[j][h + p][w + q];
+                  if(p != 4) {
+                    C[h][w] += weight[i][j][p][q] *
+                               input_window[k][q];
+                  }
+                  else {
+                    C[h][w] += weight[i][j][p][q] *
+                               input[j][h + p][w + q];
+                    input_window[old_k][q] = input[j][h + p][w + q];
+                  }
                 }
               }
+              old_k = (old_k + 1) % 4;
+              k = old_k;
             }
           }
         }
@@ -73,7 +91,6 @@ void CnnKernel_YourCode(
         relu:
         for (int h = 0; h < kTileH; ++h) {
           for (int w = 0; w < kTileW; ++w) {
-            #pragma HLS unroll
             if (C[h][w] < 0) C[h][w] = 0;
           }
         }
@@ -82,7 +99,6 @@ void CnnKernel_YourCode(
         maxpool:
         for (int h = 0; h < kTileH/2; ++h) {
           for (int w = 0; w < kTileW/2; ++w) {
-            #pragma HLS unroll
             output[i][h][w] = max(
                 max(C[h * 2][w * 2    ], C[h * 2 + 1][w * 2    ]),
                 max(C[h * 2][w * 2 + 1], C[h * 2 + 1][w * 2 + 1]));
