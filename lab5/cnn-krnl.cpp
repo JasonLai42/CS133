@@ -86,7 +86,7 @@ void CnnKernel_YourCode(
         conv:
         for (int j = 0; j < kNum; ++j) {
           for (int u = 0; u < kTileH + kKernel - 1; ++u) {
-            for(int v = 0; v < kKernel - 1; ++v) {
+            for (int v = 0; v < kKernel - 1; ++v) {
               input_window[u][v] = input[j][u][v];
             }
           }
@@ -101,7 +101,7 @@ void CnnKernel_YourCode(
                   }
                   // If q == 4, this is the 5th column: the newest column
                   else {
-                    input_window[p][start_win_col] = input[j][h + p][w + q];
+                    input_window[h + p][start_win_col] = input[j][h + p][w + q];
                     C_reduce[red_index] = weight[i][j][p][q] *
                                input_window[h + p][start_win_col];
                   }
@@ -116,8 +116,8 @@ void CnnKernel_YourCode(
               Reduce<1>(C_reduce);
               C[h][w] += C_reduce[0];
               red_index = 0;
-              start_win_col = (start_win_col + 1) % (kKernel - 1);
             }
+            start_win_col = (start_win_col + 1) % (kKernel - 1);
           }
         }
 
