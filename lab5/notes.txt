@@ -9,4 +9,5 @@ Things to try:
     - Need to implement pipeline and unrolls
         - Mess with array partitioning
     - LOOP TRANSFORMATIONS
-    - Use make resource to check memory usage; perhaps change tile sizes at the top for C
+    - Sliding window
+    - Reduction
