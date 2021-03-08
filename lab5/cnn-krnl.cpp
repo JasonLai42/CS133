@@ -43,8 +43,7 @@ void CnnKernel_YourCode(
   #pragma HLS array_partition variable=C_reduce dim=0 complete
 
   // FOR SLIDING WINDOW
-  int start_win_col = 0;
-  input_t input_window[kKernel][kKernel-1];
+  input_t input_window[kKernel][kTileW + kKernel - 1];
   #pragma HLS array_partition variable=input_window dim=0 complete
 
   // TODO:  You may want to add array partitioning here, e.g.:
@@ -85,27 +84,26 @@ void CnnKernel_YourCode(
         // Convolution
         conv:
         for (int j = 0; j < kNum; ++j) {
+          for(int u = 0; u < kKernel; ++u) {
+            for(int v = 0; v < kTileW + kKernel - 1; ++v) {
+              input_window[u][v] = input[j][u][v];
+            }
+          }
           for (int h = 0; h < kTileH; ++h) {
             for (int w = 0; w < kTileW; ++w) {
               for (int p = 0; p < kKernel; ++p) {
                 for (int q = 0; q < kKernel; ++q) {
-                  // Re-use data (the last 4 cols of the last window)
-                  if(q != 4) {
-                    if(w != 0) {
-                      C_reduce[red_index] = weight[i][j][p][q] *
-                                 input_window[p][(start_win_col + q) % 4];
-                    }
-                    else {
-                      input_window[p][q] = input[j][h + p][w + q];
-                      C_reduce[red_index] = weight[i][j][p][q] *
-                                 input_window[p][q];
-                    }
+                  if(p != 4) {
+                    C_reduce[red_index] = weight[i][j][p][q] * 
+                                          input_window[p][w + q];
                   }
-                  // If q == 4, this is the 5th column: the newest column
                   else {
-                    input_window[p][start_win_col] = input[j][h + p][w + q];
+                    for(int t = 0; t < kKernel - 1; ++t) {
+                      input_window[t][w + q] = input_window[t + 1][w + q];
+                    }
+                    input_window[p][w + q] = input[j][h + p][w + q];
                     C_reduce[red_index] = weight[i][j][p][q] *
-                               input_window[p][start_win_col];
+                                          input_window[p][w + q];
                   }
 
                   red_index++;
@@ -118,7 +116,6 @@ void CnnKernel_YourCode(
               Reduce<1>(C_reduce);
               C[h][w] += C_reduce[0];
               red_index = 0;
-              start_win_col = (start_win_col + 1) % 4;
             }
           }
         }
