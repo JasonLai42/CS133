@@ -7,12 +7,22 @@
 #include "lib/cnn-krnl.h"
 
 template <int n>
+void ReduceOdd(compute_t* array) {
+  #pragma HLS inline
+    reduce_odd:
+    for(int i = 1; i < n + 1; ++i) {
+      #pragma HLS unroll
+      array[i] += array[i + n];
+    }
+}
+
+template <int n>
 void Reduce(compute_t* array) {
   #pragma HLS inline
     reduce:
     for(int i = 0; i < n; ++i) {
       #pragma HLS unroll
-      array[i] += array[n + i];
+      array[i] += array[i + n];
     }
 }
 
@@ -28,7 +38,8 @@ void CnnKernel_YourCode(
   static compute_t C[kTileH][kTileW];
 
   // FOR REDUCTION
-  compute_t C_reduce[25];
+  int red_index = 0;
+  compute_t C_reduce[kKernel*kKernel] = {};
   #pragma HLS array_partition variable=C_reduce dim=0 complete
 
   // FOR SLIDING WINDOW
@@ -81,24 +92,32 @@ void CnnKernel_YourCode(
                   // Re-use data (the last 4 cols of the last window)
                   if(q != 4) {
                     if(w != 0) {
-                      C[h][w] += weight[i][j][p][q] *
+                      C_reduce[red_index] = weight[i][j][p][q] *
                                  input_window[p][(start_win_col + q) % 4];
                     }
                     else {
                       input_window[p][q] = input[j][h + p][w + q];
-                      C[h][w] += weight[i][j][p][q] *
+                      C_reduce[red_index] = weight[i][j][p][q] *
                                  input_window[p][q];
                     }
                   }
                   // If q == 4, this is the 5th column: the newest column
                   else {
                     input_window[p][start_win_col] = input[j][h + p][w + q];
-                    C[h][w] += weight[i][j][p][q] *
+                    C_reduce[red_index] = weight[i][j][p][q] *
                                input_window[p][start_win_col];
                   }
+
+                  red_index++;
                 }
               }
-              
+              ReduceOdd<12>(C_reduce);
+              ReduceOdd<6>(C_reduce);
+              ReduceOdd<3>(C_reduce);
+              Reduce<2>(C_reduce);
+              Reduce<1>(C_reduce);
+              C[h][w] += C_reduce[0];
+              red_index = 0;
               start_win_col = (start_win_col + 1) % 4;
             }
           }
