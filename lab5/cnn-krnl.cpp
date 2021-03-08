@@ -6,6 +6,29 @@
 // and 224 must be a multiple of the tiling size
 #include "lib/cnn-krnl.h"
 
+void InitWindow(input_t** window, input_t*** array, int j) {
+  #pragma HLS inline
+    init_window:
+    for (int u = 0; u < kTileH + kKernel - 1; ++u) {
+      #pragma HLS unroll
+      for (int v = 0; v < kKernel; ++v) {
+        window[u][v] = array[j][u][v];
+      }
+    }
+}
+
+void ShiftWindow(input_t** window, input_t*** array, int j, int w) {
+  #pragma HLS inline
+    shift_window:
+    for (int x = 0; x < kTileH + kKernel - 1; ++x) {
+      #pragma HLS unroll
+      for (int y = 0; y < kKernel - 1; ++y) {
+        window[x][y] = window[x][y + 1];
+      }
+        window[x][4] = array[j][x][w + 4];
+    }
+}
+
 template <int n>
 void ReduceOdd(compute_t* array) {
   #pragma HLS inline
@@ -43,7 +66,7 @@ void CnnKernel_YourCode(
   #pragma HLS array_partition variable=C_reduce dim=0 complete
 
   // FOR SLIDING WINDOW
-  input_t input_window[kKernel][kTileW + kKernel - 1];
+  input_t input_window[kTileH + kKernel - 1][kKernel];
   #pragma HLS array_partition variable=input_window dim=0 complete
 
   // TODO:  You may want to add array partitioning here, e.g.:
@@ -84,27 +107,25 @@ void CnnKernel_YourCode(
         // Convolution
         conv:
         for (int j = 0; j < kNum; ++j) {
-          for(int u = 0; u < kKernel; ++u) {
-            for(int v = 0; v < kTileW + kKernel - 1; ++v) {
+          for (int u = 0; u < kTileH + kKernel - 1; ++u) {
+            for (int v = 0; v < kKernel; ++v) {
               input_window[u][v] = input[j][u][v];
             }
           }
-          for (int h = 0; h < kTileH; ++h) {
-            for (int w = 0; w < kTileW; ++w) {
+          for (int w = 0; w < kTileW; ++w) {
+            if(w > 0) {
+              for (int x = 0; x < kTileH + kKernel - 1; ++x) {
+                for (int y = 0; y < kKernel - 1; ++y) {
+                  input_window[x][y] = input_window[x][y + 1];
+                }
+                  input_window[x][4] = input[j][x][w + 4];
+              }
+            }
+            for (int h = 0; h < kTileH; ++h) {
               for (int p = 0; p < kKernel; ++p) {
                 for (int q = 0; q < kKernel; ++q) {
-                  if(p != 4) {
-                    C_reduce[red_index] = weight[i][j][p][q] * 
-                                          input_window[p][w + q];
-                  }
-                  else {
-                    for(int t = 0; t < kKernel - 1; ++t) {
-                      input_window[t][w + q] = input_window[t + 1][w + q];
-                    }
-                    input_window[p][w + q] = input[j][h + p][w + q];
-                    C_reduce[red_index] = weight[i][j][p][q] *
-                                          input_window[p][w + q];
-                  }
+                  C_reduce[red_index] = weight[i][j][p][q] * 
+                                        input_window[h + p][q];
 
                   red_index++;
                 }
@@ -117,7 +138,6 @@ void CnnKernel_YourCode(
               C[h][w] += C_reduce[0];
               red_index = 0;
             }
-            start_win_col = (start_win_col + 1) % (kKernel - 1);
           }
         }
 
