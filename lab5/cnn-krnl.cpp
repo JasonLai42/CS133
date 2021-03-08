@@ -6,7 +6,7 @@
 // and 224 must be a multiple of the tiling size
 #include "lib/cnn-krnl.h"
 
-void InitWindow(input_t** window, input_t*** array, int j) {
+void InitWindow(input_t (&window)[kTileH + kKernel - 1][kKernel], input_t (&array)[kNum][kTileH+kKernel-1][kTileW+kKernel-1], int j) {
   #pragma HLS inline
     init_window:
     for (int u = 0; u < kTileH + kKernel - 1; ++u) {
@@ -17,7 +17,7 @@ void InitWindow(input_t** window, input_t*** array, int j) {
     }
 }
 
-void ShiftWindow(input_t** window, input_t*** array, int j, int w) {
+void ShiftWindow(input_t (&window)[kTileH + kKernel - 1][kKernel], input_t (&array)[kNum][kTileH+kKernel-1][kTileW+kKernel-1], int j, int w) {
   #pragma HLS inline
     shift_window:
     for (int x = 0; x < kTileH + kKernel - 1; ++x) {
@@ -107,19 +107,10 @@ void CnnKernel_YourCode(
         // Convolution
         conv:
         for (int j = 0; j < kNum; ++j) {
-          for (int u = 0; u < kTileH + kKernel - 1; ++u) {
-            for (int v = 0; v < kKernel; ++v) {
-              input_window[u][v] = input[j][u][v];
-            }
-          }
+          InitWindow(input_window, input, j);
           for (int w = 0; w < kTileW; ++w) {
             if(w > 0) {
-              for (int x = 0; x < kTileH + kKernel - 1; ++x) {
-                for (int y = 0; y < kKernel - 1; ++y) {
-                  input_window[x][y] = input_window[x][y + 1];
-                }
-                  input_window[x][4] = input[j][x][w + 4];
-              }
+              ShiftWindow(input_window, input, j, w);
             }
             for (int h = 0; h < kTileH; ++h) {
               for (int p = 0; p < kKernel; ++p) {
