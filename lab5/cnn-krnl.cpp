@@ -17,18 +17,6 @@ void InitWindow(input_t (&window)[kTileH + kKernel - 1][kKernel], input_t (&arra
     }
 }
 
-void ShiftWindow(input_t (&window)[kTileH + kKernel - 1][kKernel], input_t (&array)[kNum][kTileH+kKernel-1][kTileW+kKernel-1], int j, int w) {
-  #pragma HLS inline
-    shift_window:
-    for (int x = 0; x < kTileH + kKernel - 1; ++x) {
-      #pragma HLS unroll
-      for (int y = 0; y < kKernel - 1; ++y) {
-        window[x][y] = window[x][y + 1];
-      }
-        window[x][4] = array[j][x][w + 4];
-    }
-}
-
 template <int n>
 void ReduceOdd(compute_t* array) {
   #pragma HLS inline
@@ -109,14 +97,18 @@ void CnnKernel_YourCode(
         for (int j = 0; j < kNum; ++j) {
           InitWindow(input_window, input, j);
           for (int w = 0; w < kTileW; ++w) {
-            if(w > 0) {
-              ShiftWindow(input_window, input, j, w);
-            }
             for (int h = 0; h < kTileH; ++h) {
               for (int p = 0; p < kKernel; ++p) {
                 for (int q = 0; q < kKernel; ++q) {
                   C_reduce[red_index] = weight[i][j][p][q] * 
                                         input_window[h + p][q];
+
+                  if(q == 4 && (p == 0 || h == (kTileH - 1))) {
+                    for (int t = 0; t < kKernel - 1; ++t) {
+                      input_window[h + p][t] = input_window[h + p][t + 1];
+                    }
+                    input_window[h + p][4] = input[j][h + p][w + q + 1];
+                  }
 
                   red_index++;
                 }
