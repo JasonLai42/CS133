@@ -43,7 +43,12 @@ void CnnKernel_YourCode(
   #pragma HLS array_partition variable=C_reduce dim=0 complete
 
   // FOR SLIDING WINDOW
+<<<<<<< HEAD
   input_t input_window[kKernel][kTileW + kKernel - 1];
+=======
+  int start_win_col = 0;
+  input_t input_window[kTileH + kKernel - 1][kKernel - 1];
+>>>>>>> 2a5f039b2ee7e326fddaa5b4be3527fbc2cf2e73
   #pragma HLS array_partition variable=input_window dim=0 complete
 
   // TODO:  You may want to add array partitioning here, e.g.:
@@ -56,11 +61,11 @@ void CnnKernel_YourCode(
   read_weight_from_memory(weight_g, weight);
   read_bias_from_memory  (bias_g,   bias);
 
-  main_loop_tile_h:
-  for (int hh = 0; hh < kImSize; hh += kTileH) {
+  main_loop_tile_w:
+  for (int ww = 0; ww < kImSize; ww += kTileW) {
 
-    main_loop_tile_w:
-    for (int ww = 0; ww < kImSize; ww += kTileW) {
+    main_loop_tile_h:
+    for (int hh = 0; hh < kImSize; hh += kTileH) {
 
       // Read input[j][h][w] = Input(j, hh + h, ww + w);
       read_input_from_memory(hh, ww, input_g, input);
@@ -84,6 +89,7 @@ void CnnKernel_YourCode(
         // Convolution
         conv:
         for (int j = 0; j < kNum; ++j) {
+<<<<<<< HEAD
           for(int u = 0; u < kKernel; ++u) {
             for(int v = 0; v < kTileW + kKernel - 1; ++v) {
               input_window[u][v] = input[j][u][v];
@@ -96,14 +102,35 @@ void CnnKernel_YourCode(
                   if(p != 4) {
                     C_reduce[red_index] = weight[i][j][p][q] * 
                                           input_window[p][w + q];
+=======
+          for (int u = 0; u < kTileH + kKernel - 1; ++u) {
+            for (int v = 0; v < kKernel - 1; ++v) {
+              input_window[u][v] = input[j][u][v];
+            }
+          }
+          for (int w = 0; w < kTileW; ++w) {
+            for (int h = 0; h < kTileH; ++h) {
+              for (int p = 0; p < kKernel; ++p) {
+                for (int q = 0; q < kKernel; ++q) {
+                  // Re-use data (the last 4 cols of the last window)
+                  if(q != 4) {
+                    C_reduce[red_index] = weight[i][j][p][q] *
+                                input_window[h + p][(start_win_col + q) % 4];
+>>>>>>> 2a5f039b2ee7e326fddaa5b4be3527fbc2cf2e73
                   }
                   else {
+<<<<<<< HEAD
                     for(int t = 0; t < kKernel - 1; ++t) {
                       input_window[t][w + q] = input_window[t + 1][w + q];
                     }
                     input_window[p][w + q] = input[j][h + p][w + q];
                     C_reduce[red_index] = weight[i][j][p][q] *
                                           input_window[p][w + q];
+=======
+                    input_window[h + p][start_win_col] = input[j][h + p][w + q];
+                    C_reduce[red_index] = weight[i][j][p][q] *
+                               input_window[h + p][start_win_col];
+>>>>>>> 2a5f039b2ee7e326fddaa5b4be3527fbc2cf2e73
                   }
 
                   red_index++;
@@ -117,6 +144,7 @@ void CnnKernel_YourCode(
               C[h][w] += C_reduce[0];
               red_index = 0;
             }
+            start_win_col = (start_win_col + 1) % (kKernel - 1);
           }
         }
 
