@@ -6,6 +6,16 @@
 // and 224 must be a multiple of the tiling size
 #include "lib/cnn-krnl.h"
 
+template <int n>
+void Reduce(compute_t* array) {
+  #pragma HLS inline
+    reduce:
+    for(int i = 0; i < n; ++i) {
+      #pragma HLS unroll
+      array[i] += array[n + i];
+    }
+}
+
 void CnnKernel_YourCode(
     const input_g_t *input_g, const weight_g_t *weight_g,
     const bias_g_t  *bias_g,        output_g_t *output_g) {
@@ -17,15 +27,20 @@ void CnnKernel_YourCode(
 
   static compute_t C[kTileH][kTileW];
 
-  int k = -1;
-  int old_k = 0;
-  input_t input_window[kKernel-1][kKernel];
+  // FOR REDUCTION
+  compute_t C_reduce[25];
+  #pragma HLS array_partition variable=C_reduce dim=0 complete
+
+  // FOR SLIDING WINDOW
+  int start_win_col = 0;
+  input_t input_window[kKernel][kKernel-1];
   #pragma HLS array_partition variable=input_window dim=0 complete
 
   // TODO:  You may want to add array partitioning here, e.g.:
-  #pragma HLS array_partition variable=bias factor=56 cyclic
-  #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
-  #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
+  // #pragma HLS array_partition variable=C dim=0 complete
+  // #pragma HLS array_partition variable=bias factor=56 cyclic
+  // #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
+  // #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
 
   // Read the whole arrays from memory to device
   read_weight_from_memory(weight_g, weight);
@@ -59,30 +74,32 @@ void CnnKernel_YourCode(
         // Convolution
         conv:
         for (int j = 0; j < kNum; ++j) {
-          // Initialize sliding window for this channel j
-          for (int u = 0; u < kKernel-1; ++u) {
-            for (int v = 0; v < kKernel; ++v) {
-              input_window[u][v] = input[j][u][v];
-            }
-          }
           for (int h = 0; h < kTileH; ++h) {
             for (int w = 0; w < kTileW; ++w) {
               for (int p = 0; p < kKernel; ++p) {
-                k++;
                 for (int q = 0; q < kKernel; ++q) {
-                  if(p != 4) {
-                    C[h][w] += weight[i][j][p][q] *
-                               input_window[k][q];
+                  // Re-use data (the last 4 cols of the last window)
+                  if(q != 4) {
+                    if(w != 0) {
+                      C[h][w] += weight[i][j][p][q] *
+                                 input_window[p][(start_win_col + q) % 4];
+                    }
+                    else {
+                      input_window[p][q] = input[j][h + p][w + q];
+                      C[h][w] += weight[i][j][p][q] *
+                                 input_window[p][q];
+                    }
                   }
+                  // If q == 4, this is the 5th column: the newest column
                   else {
+                    input_window[p][start_win_col] = input[j][h + p][w + q];
                     C[h][w] += weight[i][j][p][q] *
-                               input[j][h + p][w + q];
-                    input_window[old_k][q] = input[j][h + p][w + q];
+                               input_window[p][start_win_col];
                   }
                 }
               }
-              old_k = (old_k + 1) % 4;
-              k = old_k;
+              
+              start_win_col = (start_win_col + 1) % 4;
             }
           }
         }
