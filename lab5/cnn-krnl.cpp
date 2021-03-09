@@ -1,17 +1,17 @@
 // If you want to modify the tiling size, uncomment:
-#define kTileH   (14)
+#define kTileH   (28)
 #define kTileW   (56)
 
 // Tiling specification must be before the #include
 // and 224 must be a multiple of the tiling size
 #include "lib/cnn-krnl.h"
 
-void InitWindow(input_t (&window)[kTileH + kKernel - 1][kKernel], input_t (&array)[kTileH+kKernel-1][kTileW+kKernel-1]) {
+void InitWindow(input_t (&window)[kKernel][kTileW + kKernel - 1], input_t (&array)[kTileH+kKernel-1][kTileW+kKernel-1]) {
   #pragma HLS inline
     init_window:
-    for (int u = 0; u < kTileH + kKernel - 1; ++u) {
+    for (int u = 0; u < kKernel; ++u) {
       #pragma HLS unroll
-      for (int v = 0; v < kKernel; ++v) {
+      for (int v = 0; v < kTileW + kKernel - 1; ++v) {
         window[u][v] = array[u][v];
       }
     }
@@ -54,7 +54,7 @@ void CnnKernel_YourCode(
   #pragma HLS array_partition variable=C_reduce dim=0 complete
 
   // FOR SLIDING WINDOW
-  input_t input_window[kTileH + kKernel - 1][kKernel];
+  input_t input_window[kKernel][kTileW + kKernel - 1];
   #pragma HLS array_partition variable=input_window dim=0 complete
 
   // TODO:  You may want to add array partitioning here, e.g.:
@@ -67,11 +67,11 @@ void CnnKernel_YourCode(
   read_weight_from_memory(weight_g, weight);
   read_bias_from_memory  (bias_g,   bias);
 
-  main_loop_tile_w:
-  for (int ww = 0; ww < kImSize; ww += kTileW) {
+  main_loop_tile_h:
+  for (int hh = 0; hh < kImSize; hh += kTileH) {
 
-    main_loop_tile_h:
-    for (int hh = 0; hh < kImSize; hh += kTileH) {
+    main_loop_tile_w:
+    for (int ww = 0; ww < kImSize; ww += kTileW) {
 
       // Read input[j][h][w] = Input(j, hh + h, ww + w);
       read_input_from_memory(hh, ww, input_g, input);
@@ -96,18 +96,18 @@ void CnnKernel_YourCode(
         conv:
         for (int j = 0; j < kNum; ++j) {
           InitWindow(input_window, input[j]);
-          for (int w = 0; w < kTileW; ++w) {
-            for (int h = 0; h < kTileH; ++h) {
+          for (int h = 0; h < kTileH; ++h) {
+            for (int w = 0; w < kTileW; ++w) {
               for (int p = 0; p < kKernel; ++p) {
                 for (int q = 0; q < kKernel; ++q) {
                   C_reduce[red_index] = weight[i][j][p][q] * 
-                                        input_window[h + p][q];
+                                        input_window[p][w + q];
 
-                  if(q == 4 && (p == 0 || h == (kTileH - 1))) {
+                  if(p == 4 && (q == 0 || w == (kTileW - 1))) {
                     for (int t = 0; t < kKernel - 1; ++t) {
-                      input_window[h + p][t] = input_window[h + p][t + 1];
+                      input_window[t][w + q] = input_window[t + 1][w + q];
                     }
-                    input_window[h + p][4] = input[j][h + p][w + q + 1];
+                    input_window[4][w + q] = input[j][h + p + 1][w + q];
                   }
 
                   red_index++;
@@ -146,8 +146,8 @@ void CnnKernel_YourCode(
       // Write Output(i, hh/2 + h, ww/2 + w) = output[i][h][w];
       write_output_to_memory(hh, ww, output_g, output);
 
-      fprintf(stderr, "Computation for tile (%d, %d) is completed.\n",
-              hh, ww) ;
+      // fprintf(stderr, "Computation for tile (%d, %d) is completed.\n",
+      //         hh, ww) ;
     }
   }
 
