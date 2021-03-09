@@ -1,6 +1,6 @@
 // If you want to modify the tiling size, uncomment:
-// #define kTileH   (28)
-// #define kTileW   (56)
+#define kTileH   (14)
+#define kTileW   (56)
 
 // Tiling specification must be before the #include
 // and 224 must be a multiple of the tiling size
@@ -81,8 +81,8 @@ void CnnKernel_YourCode(
         // TODO:  Please modify the code inside this loop :-)
 
         // You can use printf in software simulation for debugging
-        fprintf(stderr, "Finished %d%% channel(s) #%d/#%d\r",
-                100*i/kNum, i, kNum);
+        // fprintf(stderr, "Finished %d%% channel(s) #%d/#%d\r",
+        //         100*i/kNum, i, kNum);
 
         // Set bias
         set_bias:
