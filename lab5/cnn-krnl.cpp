@@ -59,9 +59,9 @@ void CnnKernel_YourCode(
 
   // TODO:  You may want to add array partitioning here, e.g.:
   // #pragma HLS array_partition variable=C dim=0 complete
-  // #pragma HLS array_partition variable=bias factor=56 cyclic
-  // #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
-  // #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
+  #pragma HLS array_partition variable=bias factor=56 cyclic
+  #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
+  #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
 
   // Read the whole arrays from memory to device
   read_weight_from_memory(weight_g, weight);
@@ -87,6 +87,7 @@ void CnnKernel_YourCode(
         // Set bias
         set_bias:
         for (int h = 0; h < kTileH; ++h) {
+          #pragma HLS pipeline
           for (int w = 0; w < kTileW; ++w) {
             C[h][w] = bias[i];
           }
@@ -99,7 +100,9 @@ void CnnKernel_YourCode(
           for (int h = 0; h < kTileH; ++h) {
             for (int w = 0; w < kTileW; ++w) {
               for (int p = 0; p < kKernel; ++p) {
+                #pragma HLS unroll
                 for (int q = 0; q < kKernel; ++q) {
+                  #pragma HLS unroll
                   C_reduce[red_index] = weight[i][j][p][q] * 
                                         input_window[p][w + q];
 
@@ -128,6 +131,7 @@ void CnnKernel_YourCode(
         relu:
         for (int h = 0; h < kTileH; ++h) {
           for (int w = 0; w < kTileW; ++w) {
+            #pragma HLS unroll
             if (C[h][w] < 0) C[h][w] = 0;
           }
         }
@@ -136,6 +140,7 @@ void CnnKernel_YourCode(
         maxpool:
         for (int h = 0; h < kTileH/2; ++h) {
           for (int w = 0; w < kTileW/2; ++w) {
+            #pragma HLS unroll
             output[i][h][w] = max(
                 max(C[h * 2][w * 2    ], C[h * 2 + 1][w * 2    ]),
                 max(C[h * 2][w * 2 + 1], C[h * 2 + 1][w * 2 + 1]));
