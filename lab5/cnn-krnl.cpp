@@ -6,13 +6,13 @@
 // and 224 must be a multiple of the tiling size
 #include "lib/cnn-krnl.h"
 
-void InitWindow(input_t (&window)[kTileH + kKernel - 1][kKernel], input_t (&array)[kNum][kTileH+kKernel-1][kTileW+kKernel-1], int j) {
+void InitWindow(input_t (&window)[kTileH + kKernel - 1][kKernel], input_t (&array)[kTileH+kKernel-1][kTileW+kKernel-1]) {
   #pragma HLS inline
     init_window:
     for (int u = 0; u < kTileH + kKernel - 1; ++u) {
       #pragma HLS unroll
       for (int v = 0; v < kKernel; ++v) {
-        window[u][v] = array[j][u][v];
+        window[u][v] = array[u][v];
       }
     }
 }
@@ -95,7 +95,7 @@ void CnnKernel_YourCode(
         // Convolution
         conv:
         for (int j = 0; j < kNum; ++j) {
-          InitWindow(input_window, input, j);
+          InitWindow(input_window, input[j]);
           for (int w = 0; w < kTileW; ++w) {
             for (int h = 0; h < kTileH; ++h) {
               for (int p = 0; p < kKernel; ++p) {
