@@ -85,28 +85,34 @@ void CnnKernel_YourCode(
         //         100*i/kNum, i, kNum);
 
         // Set bias
-        set_bias:
+        set_bias_h:
         for (int h = 0; h < kTileH; ++h) {
           #pragma HLS pipeline
+          set_bias_w:
           for (int w = 0; w < kTileW; ++w) {
             C[h][w] = bias[i];
           }
         }
 
         // Convolution
-        conv:
+        conv_j:
         for (int j = 0; j < kNum; ++j) {
           InitWindow(input_window, input[j]);
+          conv_h:
           for (int h = 0; h < kTileH; ++h) {
+            conv_w:
             for (int w = 0; w < kTileW; ++w) {
+              conv_p:
               for (int p = 0; p < kKernel; ++p) {
                 #pragma HLS unroll
+                conv_q:
                 for (int q = 0; q < kKernel; ++q) {
                   #pragma HLS unroll
                   C_reduce[red_index] = weight[i][j][p][q] * 
                                         input_window[p][w + q];
 
                   if(p == 4 && (q == 0 || w == (kTileW - 1))) {
+                    conv_shift:
                     for (int t = 0; t < kKernel - 1; ++t) {
                       input_window[t][w + q] = input_window[t + 1][w + q];
                     }
@@ -128,19 +134,21 @@ void CnnKernel_YourCode(
         }
 
         // ReLU
-        relu:
+        relu_h:
         for (int h = 0; h < kTileH; ++h) {
+          #pragma HLS pipeline
+          relu_w:
           for (int w = 0; w < kTileW; ++w) {
-            #pragma HLS unroll
             if (C[h][w] < 0) C[h][w] = 0;
           }
         }
 
         // Max pooling
-        maxpool:
+        maxpool_h:
         for (int h = 0; h < kTileH/2; ++h) {
+          #pragma HLS pipeline
+          maxpool_w:
           for (int w = 0; w < kTileW/2; ++w) {
-            #pragma HLS unroll
             output[i][h][w] = max(
                 max(C[h * 2][w * 2    ], C[h * 2 + 1][w * 2    ]),
                 max(C[h * 2][w * 2 + 1], C[h * 2 + 1][w * 2 + 1]));
