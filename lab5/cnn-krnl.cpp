@@ -7,7 +7,7 @@
 #include "lib/cnn-krnl.h"
 
 void InitWindow(input_t (&window)[kKernel][kTileW + kKernel - 1], input_t (&array)[kTileH+kKernel-1][kTileW+kKernel-1]) {
-  #pragma HLS inline
+  #pragma HLS inline off
     init_window:
     for (int u = 0; u < kKernel; ++u) {
       #pragma HLS pipeline
@@ -19,7 +19,7 @@ void InitWindow(input_t (&window)[kKernel][kTileW + kKernel - 1], input_t (&arra
 
 template <int n>
 void ReduceOdd(compute_t* array) {
-  #pragma HLS inline
+  #pragma HLS inline off
     reduce_odd:
     for(int i = 1; i < n + 1; ++i) {
       #pragma HLS unroll
@@ -29,7 +29,7 @@ void ReduceOdd(compute_t* array) {
 
 template <int n>
 void Reduce(compute_t* array) {
-  #pragma HLS inline
+  #pragma HLS inline off
     reduce:
     for(int i = 0; i < n; ++i) {
       #pragma HLS unroll
