@@ -29,3 +29,18 @@ INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 56, Depth = 5
 WARNING: [HLS 200-885] Unable to schedule 'load' operation ('C_V_load_3', /home/centos/CS133/lab5/cnn-krnl.cpp:154) on array 'C_V' due to limited memory ports. Please consider using a memory core with more ports or partitioning the array 'C_V'.
 Resolution: For help on HLS 200-885 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-885.html
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 56, Depth = 58.ls
+
+Optimizations:
+    - Reduction
+        - Done in a tree structure with ReduceOdd (reduces elements 1 to 24; skips 0), then Reduce
+    - Sliding window
+        - InitWindow pipelined function
+    - Pipeline conv_h, pipeline bias, relu, maxpool_h
+    - Change h tile size to 112
+    - Partition bias, weight, input, input_window, C_reduce
+        - input_window and C_reduce are registers
+
+Optimization notes (check synthesis text for more possible):
+    - Pipelining conv_h auto partitions C on dim=2
+        - Doesn't like pipelining conv_j, (conv_h too big to unroll)
+    - Check II's of loops in synthesis.txt
