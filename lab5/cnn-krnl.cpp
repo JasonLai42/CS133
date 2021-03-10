@@ -10,7 +10,7 @@ void InitWindow(input_t (&window)[kKernel][kTileW + kKernel - 1], input_t (&arra
   #pragma HLS inline
     init_window:
     for (int u = 0; u < kKernel; ++u) {
-      #pragma HLS unroll
+      #pragma HLS pipeline
       for (int v = 0; v < kTileW + kKernel - 1; ++v) {
         window[u][v] = array[u][v];
       }
@@ -81,8 +81,8 @@ void CnnKernel_YourCode(
         // TODO:  Please modify the code inside this loop :-)
 
         // You can use printf in software simulation for debugging
-        // fprintf(stderr, "Finished %d%% channel(s) #%d/#%d\r",
-        //         100*i/kNum, i, kNum);
+        fprintf(stderr, "Finished %d%% channel(s) #%d/#%d\r",
+                100*i/kNum, i, kNum);
 
         // Set bias
         set_bias_h:
@@ -100,14 +100,13 @@ void CnnKernel_YourCode(
           InitWindow(input_window, input[j]);
           conv_h:
           for (int h = 0; h < kTileH; ++h) {
+            #pragma HLS pipeline
             conv_w:
             for (int w = 0; w < kTileW; ++w) {
               conv_p:
               for (int p = 0; p < kKernel; ++p) {
-                #pragma HLS unroll
                 conv_q:
                 for (int q = 0; q < kKernel; ++q) {
-                  #pragma HLS unroll
                   C_reduce[red_index] = weight[i][j][p][q] * 
                                         input_window[p][w + q];
 
@@ -159,8 +158,8 @@ void CnnKernel_YourCode(
       // Write Output(i, hh/2 + h, ww/2 + w) = output[i][h][w];
       write_output_to_memory(hh, ww, output_g, output);
 
-      // fprintf(stderr, "Computation for tile (%d, %d) is completed.\n",
-      //         hh, ww) ;
+      fprintf(stderr, "Computation for tile (%d, %d) is completed.\n",
+              hh, ww) ;
     }
   }
 
