@@ -58,7 +58,7 @@ void CnnKernel_YourCode(
   #pragma HLS array_partition variable=input_window dim=0 complete
 
   // TODO:  You may want to add array partitioning here, e.g.:
-  #pragma HLS array_partition variable=bias factor=56 cyclic
+  #pragma HLS array_partition variable=bias factor=16 cyclic
   #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
   #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
 
