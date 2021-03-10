@@ -1,5 +1,5 @@
 // If you want to modify the tiling size, uncomment:
-#define kTileH   (28)
+#define kTileH   (112)
 #define kTileW   (56)
 
 // Tiling specification must be before the #include
@@ -58,7 +58,6 @@ void CnnKernel_YourCode(
   #pragma HLS array_partition variable=input_window dim=0 complete
 
   // TODO:  You may want to add array partitioning here, e.g.:
-  // #pragma HLS array_partition variable=C dim=0 complete
   #pragma HLS array_partition variable=bias factor=56 cyclic
   #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
   #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
