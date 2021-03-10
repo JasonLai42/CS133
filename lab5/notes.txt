@@ -11,3 +11,21 @@ Things to try:
     - LOOP TRANSFORMATIONS
     - Sliding window
     - Reduction
+
+Look at:
+- WARNING: [HLS 200-914] Completely partitioning array 'input_window.V' (/home/centos/CS133/lab5/cnn-krnl.cpp:57) accessed through non-constant indices on dimension 1 (/home/centos/CS133/lab5/cnn-krnl.cpp:15:9), which may result in long runtime and suboptimal QoR due to large multiplexers. Please consider wrapping the array access into a function or using a register file core instead.
+
+- INFO: [SCHED 204-61] Pipelining loop 'set_bias_h'.
+WARNING: [HLS 200-885] Unable to schedule 'store' operation ('C_V_addr_2_write_ln205') of constant 0 on array 'C_V' due to limited memory ports. Please consider using a memory core with more ports or partitioning the array 'C_V'.
+Resolution: For help on HLS 200-885 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-885.html
+INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 28, Depth = 28.
+
+- INFO: [SCHED 204-61] Pipelining loop 'relu_h'.
+WARNING: [HLS 200-885] Unable to schedule 'load' operation ('C_V_load_165') on array 'C_V' due to limited memory ports. Please consider using a memory core with more ports or partitioning the array 'C_V'.
+Resolution: For help on HLS 200-885 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-885.html
+INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 56, Depth = 56.
+
+- INFO: [SCHED 204-61] Pipelining loop 'maxpool_h'.
+WARNING: [HLS 200-885] Unable to schedule 'load' operation ('C_V_load_3', /home/centos/CS133/lab5/cnn-krnl.cpp:154) on array 'C_V' due to limited memory ports. Please consider using a memory core with more ports or partitioning the array 'C_V'.
+Resolution: For help on HLS 200-885 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-885.html
+INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 56, Depth = 58.ls
