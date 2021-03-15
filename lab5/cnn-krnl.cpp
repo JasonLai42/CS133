@@ -17,26 +17,6 @@ void InitWindow(input_t (&window)[kKernel][kTileW + kKernel - 1], input_t (&arra
     }
 }
 
-template <int n>
-void ReduceOdd(compute_t* array) {
-  #pragma HLS inline off
-    reduce_odd:
-    for(int i = 1; i < n + 1; ++i) {
-      #pragma HLS unroll
-      array[i] += array[i + n];
-    }
-}
-
-template <int n>
-void Reduce(compute_t* array) {
-  #pragma HLS inline off
-    reduce:
-    for(int i = 0; i < n; ++i) {
-      #pragma HLS unroll
-      array[i] += array[i + n];
-    }
-}
-
 void CnnKernel_YourCode(
     const input_g_t *input_g, const weight_g_t *weight_g,
     const bias_g_t  *bias_g,        output_g_t *output_g) {
@@ -47,11 +27,6 @@ void CnnKernel_YourCode(
   static output_t  output[kNum][kTileH/2][kTileW/2];
 
   static compute_t C[kTileH][kTileW];
-
-  // FOR REDUCTION
-  int red_index = 0;
-  compute_t C_reduce[kKernel*kKernel] = {};
-  #pragma HLS array_partition variable=C_reduce dim=0 complete
 
   // FOR SLIDING WINDOW
   input_t input_window[kKernel][kTileW + kKernel - 1];
@@ -107,8 +82,8 @@ void CnnKernel_YourCode(
               for (int p = 0; p < kKernel; ++p) {
                 conv_q:
                 for (int q = 0; q < kKernel; ++q) {
-                  C_reduce[red_index] = weight[i][j][p][q] * 
-                                        input_window[p][w + q];
+                  C[h][w] += weight[i][j][p][q] * 
+                             input_window[p][w + q];
 
                   if(p == 4 && (q == 0 || w == (kTileW - 1))) {
                     conv_shift:
@@ -117,17 +92,8 @@ void CnnKernel_YourCode(
                     }
                     input_window[4][w + q] = input[j][h + p + 1][w + q];
                   }
-
-                  red_index++;
                 }
               }
-              ReduceOdd<12>(C_reduce);
-              ReduceOdd<6>(C_reduce);
-              ReduceOdd<3>(C_reduce);
-              Reduce<2>(C_reduce);
-              Reduce<1>(C_reduce);
-              C[h][w] += C_reduce[0];
-              red_index = 0;
             }
           }
         }
