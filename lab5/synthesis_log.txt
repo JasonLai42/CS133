@@ -6,7 +6,7 @@
 
 source /opt/Xilinx/Vitis/2020.1/scripts/vitis_hls/hls.tcl -notrace
 INFO: [HLS 200-10] Running '/opt/Xilinx/Vitis/2020.1/bin/unwrapped/lnx64.o/vitis_hls'
-INFO: [HLS 200-10] For user 'centos' on host 'ip-172-31-78-127.ec2.internal' (Linux_x86_64 version 3.10.0-1127.10.1.el7.x86_64) on Wed Mar 10 08:57:02 UTC 2021
+INFO: [HLS 200-10] For user 'centos' on host 'ip-172-31-78-127.ec2.internal' (Linux_x86_64 version 3.10.0-1127.10.1.el7.x86_64) on Sun Mar 14 23:46:39 UTC 2021
 INFO: [HLS 200-10] On os "CentOS Linux release 7.7.1908 (Core)"
 INFO: [HLS 200-10] In directory '/home/centos/CS133/lab5/_x/cnn.hw.xilinx_aws-vu9p-f1_shell-v04261818_201920_2/CnnKernel'
 Sourcing Tcl script 'CnnKernel.tcl'
@@ -26,8 +26,8 @@ INFO: [SYN 201-201] Setting up clock 'default' with an uncertainty of 1.08ns.
 INFO: [HLS 200-10] Analyzing design file '/home/centos/CS133/lab5/cnn-krnl.cpp' ... 
 WARNING: [HLS 207-1017] unknown pragma ignored: /home/centos/CS133/lab5/lib/cnn-krnl.h:5:13
 WARNING: [HLS 207-1017] unknown pragma ignored: /home/centos/CS133/lab5/lib/cnn-krnl.h:6:13
-WARNING: [HLS 207-5318] expression result unused: /home/centos/CS133/lab5/cnn-krnl.cpp:83:10
-WARNING: [HLS 207-5318] expression result unused: /home/centos/CS133/lab5/cnn-krnl.cpp:160:8
+WARNING: [HLS 207-5318] expression result unused: /home/centos/CS133/lab5/cnn-krnl.cpp:84:10
+WARNING: [HLS 207-5318] expression result unused: /home/centos/CS133/lab5/cnn-krnl.cpp:161:8
 INFO: [HLS 200-777] Using interface defaults for 'Vitis' target.
 INFO: [HLS 214-186] Unrolling loop 'reduce_odd' (/home/centos/CS133/lab5/cnn-krnl.cpp:24:5) in function 'ReduceOdd<12>' completely with a factor of 12 (/home/centos/CS133/lab5/cnn-krnl.cpp:24:5)
 INFO: [HLS 214-186] Unrolling loop 'reduce_odd' (/home/centos/CS133/lab5/cnn-krnl.cpp:24:5) in function 'ReduceOdd<6>' completely with a factor of 6 (/home/centos/CS133/lab5/cnn-krnl.cpp:24:5)
@@ -40,36 +40,39 @@ INFO: [HLS 214-178] Inlining function 'read_input_from_memory(int, int, ap_uint<
 INFO: [HLS 214-178] Inlining function 'write_output_to_memory(int, int, ap_uint<512>*, ap_ufixed<8, 15, (ap_q_mode)5, (ap_o_mode)3, 0> (*) [56][28])' into 'CnnKernel_YourCode(ap_uint<512> const*, ap_uint<512> const*, ap_uint<512> const*, ap_uint<512>*)' (/home/centos/CS133/lab5/cnn-krnl.cpp:42:0)
 INFO: [HLS 214-115] Burst read of length 25600 and bit width 512 has been inferred on port 'gmem' (/home/centos/CS133/lab5/lib/cnn-krnl.h:122:3)
 INFO: [HLS 214-115] Burst read of variable length and bit width 512 has been inferred on port 'gmem' (/home/centos/CS133/lab5/lib/cnn-krnl.h:171:25)
-INFO: [HLS 200-111] Finished Linking Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60706 ; free virtual = 82948
-INFO: [HLS 200-111] Finished Checking Pragmas Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60706 ; free virtual = 82948
+INFO: [HLS 200-111] Finished Linking Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60760 ; free virtual = 82948
+INFO: [HLS 200-111] Finished Checking Pragmas Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60760 ; free virtual = 82948
 INFO: [HLS 200-10] Starting code transformations ...
-INFO: [HLS 200-111] Finished Standard Transforms Time (s): cpu = 00:00:32 ; elapsed = 00:00:33 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60481 ; free virtual = 82726
+INFO: [HLS 200-111] Finished Standard Transforms Time (s): cpu = 00:00:32 ; elapsed = 00:00:33 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60544 ; free virtual = 82736
 INFO: [HLS 200-10] Checking synthesizability ...
 WARNING: [SYNCHK 200-23] /opt/Xilinx/Vitis/2020.1/common/technology/autopilot/ap_int_ref.h:414: variable-indexed range selection may cause suboptimal QoR.
 INFO: [SYNCHK 200-10] 0 error(s), 1 warning(s).
-INFO: [HLS 200-111] Finished Checking Synthesizability Time (s): cpu = 00:00:33 ; elapsed = 00:00:33 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60476 ; free virtual = 82724
-INFO: [XFORM 203-502] Unrolling all sub-loops inside loop 'set_bias_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:88) in function 'CnnKernel_YourCode' for pipelining.
-INFO: [XFORM 203-502] Unrolling all sub-loops inside loop 'conv_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:101) in function 'CnnKernel_YourCode' for pipelining.
-INFO: [XFORM 203-502] Unrolling all sub-loops inside loop 'relu_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:136) in function 'CnnKernel_YourCode' for pipelining.
-INFO: [XFORM 203-502] Unrolling all sub-loops inside loop 'maxpool_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:146) in function 'CnnKernel_YourCode' for pipelining.
+INFO: [HLS 200-111] Finished Checking Synthesizability Time (s): cpu = 00:00:33 ; elapsed = 00:00:33 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60538 ; free virtual = 82733
+INFO: [XFORM 203-502] Unrolling all sub-loops inside loop 'set_bias_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:89) in function 'CnnKernel_YourCode' for pipelining.
+INFO: [XFORM 203-502] Unrolling all sub-loops inside loop 'conv_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:102) in function 'CnnKernel_YourCode' for pipelining.
+INFO: [XFORM 203-502] Unrolling all sub-loops inside loop 'relu_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:137) in function 'CnnKernel_YourCode' for pipelining.
+INFO: [XFORM 203-502] Unrolling all sub-loops inside loop 'maxpool_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:147) in function 'CnnKernel_YourCode' for pipelining.
 INFO: [XFORM 203-502] Unrolling all sub-loops inside loop 'init_window' (/home/centos/CS133/lab5/cnn-krnl.cpp:12) in function 'InitWindow' for pipelining.
-INFO: [HLS 200-489] Unrolling loop 'set_bias_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:91) in function 'CnnKernel_YourCode' completely with a factor of 56.
-INFO: [HLS 200-489] Unrolling loop 'conv_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:104) in function 'CnnKernel_YourCode' completely with a factor of 56.
-INFO: [HLS 200-489] Unrolling loop 'conv_p' (/home/centos/CS133/lab5/cnn-krnl.cpp:106) in function 'CnnKernel_YourCode' completely with a factor of 5.
-INFO: [HLS 200-489] Unrolling loop 'conv_q' (/home/centos/CS133/lab5/cnn-krnl.cpp:108) in function 'CnnKernel_YourCode' completely with a factor of 5.
-INFO: [HLS 200-489] Unrolling loop 'conv_shift' (/home/centos/CS133/lab5/cnn-krnl.cpp:114) in function 'CnnKernel_YourCode' completely with a factor of 4.
-INFO: [HLS 200-489] Unrolling loop 'relu_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:139) in function 'CnnKernel_YourCode' completely with a factor of 56.
-INFO: [HLS 200-489] Unrolling loop 'maxpool_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:149) in function 'CnnKernel_YourCode' completely with a factor of 28.
+INFO: [HLS 200-489] Unrolling loop 'set_bias_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:92) in function 'CnnKernel_YourCode' completely with a factor of 56.
+INFO: [HLS 200-489] Unrolling loop 'conv_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:105) in function 'CnnKernel_YourCode' completely with a factor of 56.
+INFO: [HLS 200-489] Unrolling loop 'conv_p' (/home/centos/CS133/lab5/cnn-krnl.cpp:107) in function 'CnnKernel_YourCode' completely with a factor of 5.
+INFO: [HLS 200-489] Unrolling loop 'conv_q' (/home/centos/CS133/lab5/cnn-krnl.cpp:109) in function 'CnnKernel_YourCode' completely with a factor of 5.
+INFO: [HLS 200-489] Unrolling loop 'conv_shift' (/home/centos/CS133/lab5/cnn-krnl.cpp:115) in function 'CnnKernel_YourCode' completely with a factor of 4.
+INFO: [HLS 200-489] Unrolling loop 'relu_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:140) in function 'CnnKernel_YourCode' completely with a factor of 56.
+INFO: [HLS 200-489] Unrolling loop 'maxpool_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:150) in function 'CnnKernel_YourCode' completely with a factor of 28.
 INFO: [HLS 200-489] Unrolling loop 'VITIS_LOOP_14_1' (/home/centos/CS133/lab5/cnn-krnl.cpp:14) in function 'InitWindow' completely with a factor of 60.
 INFO: [XFORM 203-102] Partitioning array 'C.V' in dimension 2 automatically.
 INFO: [XFORM 203-101] Partitioning array 'C_reduce.V' (/home/centos/CS133/lab5/cnn-krnl.cpp:53) in dimension 1 completely.
 INFO: [XFORM 203-101] Partitioning array 'input_window.V' (/home/centos/CS133/lab5/cnn-krnl.cpp:57) in dimension 1 completely.
 INFO: [XFORM 203-101] Partitioning array 'bias.V'  in dimension 1 with a cyclic factor 16.
 INFO: [XFORM 203-101] Partitioning array 'weight.V'  in dimension 3 completely.
-INFO: [XFORM 203-101] Partitioning array 'input.V'  in dimension 3 with a cyclic factor 5.
+INFO: [XFORM 203-101] Partitioning array 'input.V'  in dimension 2 with a cyclic factor 5.
 INFO: [XFORM 203-101] Partitioning array 'input_window.V' (/home/centos/CS133/lab5/cnn-krnl.cpp:57) in dimension 2 completely.
-INFO: [XFORM 203-11] Balancing expressions in function 'CnnKernel_YourCode' (/home/centos/CS133/lab5/cnn-krnl.cpp:32:36)...6 expression(s) balanced.
-INFO: [HLS 200-111] Finished Pre-synthesis Time (s): cpu = 00:01:17 ; elapsed = 00:01:17 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60402 ; free virtual = 82655
+WARNING: [HLS 200-914] Completely partitioning array 'input.V'  accessed through non-constant indices on dimension 3, which may result in long runtime and suboptimal QoR due to large multiplexers. Please consider wrapping the array access into a function or using a register file core instead.
+Resolution: For help on HLS 200-914 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-914.html
+INFO: [XFORM 203-101] Partitioning array 'input.V'  in dimension 3 completely.
+INFO: [XFORM 203-11] Balancing expressions in function 'CnnKernel_YourCode' (/home/centos/CS133/lab5/cnn-krnl.cpp:32:15)...6 expression(s) balanced.
+INFO: [HLS 200-111] Finished Pre-synthesis Time (s): cpu = 00:01:30 ; elapsed = 00:01:31 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60452 ; free virtual = 82652
 WARNING: [HLS 200-960] Cannot flatten loop 'read_weight' (/home/centos/CS133/lab5/lib/cnn-krnl.h:122:12) in function 'CnnKernel_YourCode' the outer loop is not a perfect loop.
 Resolution: For help on HLS 200-960 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-960.html
 WARNING: [HLS 200-960] Cannot flatten loop 'VITIS_LOOP_171_2' (/home/centos/CS133/lab5/lib/cnn-krnl.h:171:34) in function 'CnnKernel_YourCode' the outer loop is not a perfect loop.
@@ -77,25 +80,25 @@ Resolution: For help on HLS 200-960 see www.xilinx.com/html_docs/xilinx2020_1/hl
 WARNING: [HLS 200-960] Cannot flatten loop 'VITIS_LOOP_164_1' (/home/centos/CS133/lab5/lib/cnn-krnl.h:164:32) in function 'CnnKernel_YourCode' the outer loop is not a perfect loop because there is nontrivial logic before entering the inner loop.
 Resolution: For help on HLS 200-960 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-960.html
 INFO: [XFORM 203-541] Flattening a loop nest 'read_input' (/home/centos/CS133/lab5/lib/cnn-krnl.h:163:12) in function 'CnnKernel_YourCode'.
-WARNING: [HLS 200-960] Cannot flatten loop 'conv_j' (/home/centos/CS133/lab5/cnn-krnl.cpp:98:18) in function 'CnnKernel_YourCode' the outer loop is not a perfect loop.
+WARNING: [HLS 200-960] Cannot flatten loop 'conv_j' (/home/centos/CS133/lab5/cnn-krnl.cpp:99:18) in function 'CnnKernel_YourCode' the outer loop is not a perfect loop.
 Resolution: For help on HLS 200-960 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-960.html
-WARNING: [HLS 200-960] Cannot flatten loop 'main_loop_i' (/home/centos/CS133/lab5/cnn-krnl.cpp:79:16) in function 'CnnKernel_YourCode' more than one sub loop.
+WARNING: [HLS 200-960] Cannot flatten loop 'main_loop_i' (/home/centos/CS133/lab5/cnn-krnl.cpp:80:16) in function 'CnnKernel_YourCode' more than one sub loop.
 Resolution: For help on HLS 200-960 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-960.html
 WARNING: [HLS 200-960] Cannot flatten loop 'VITIS_LOOP_211_2' (/home/centos/CS133/lab5/lib/cnn-krnl.h:211:34) in function 'CnnKernel_YourCode' the outer loop is not a perfect loop because there is nontrivial logic in the loop latch.
 Resolution: For help on HLS 200-960 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-960.html
 WARNING: [HLS 200-960] Cannot flatten loop 'VITIS_LOOP_204_1' (/home/centos/CS133/lab5/lib/cnn-krnl.h:204:32) in function 'CnnKernel_YourCode' the outer loop is not a perfect loop.
 Resolution: For help on HLS 200-960 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-960.html
 INFO: [XFORM 203-541] Flattening a loop nest 'write_output' (/home/centos/CS133/lab5/lib/cnn-krnl.h:203:12) in function 'CnnKernel_YourCode'.
-WARNING: [HLS 200-960] Cannot flatten loop 'main_loop_tile_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:73:14) in function 'CnnKernel_YourCode' more than one sub loop.
+WARNING: [HLS 200-960] Cannot flatten loop 'main_loop_tile_w' (/home/centos/CS133/lab5/cnn-krnl.cpp:74:14) in function 'CnnKernel_YourCode' more than one sub loop.
 Resolution: For help on HLS 200-960 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-960.html
-INFO: [XFORM 203-541] Flattening a loop nest 'main_loop_tile_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:70:12) in function 'CnnKernel_YourCode'.
+INFO: [XFORM 203-541] Flattening a loop nest 'main_loop_tile_h' (/home/centos/CS133/lab5/cnn-krnl.cpp:71:12) in function 'CnnKernel_YourCode'.
 WARNING: [XFORM 203-631] Renaming function 'max<ap_fixed<17, 16, (ap_q_mode)5, (ap_o_mode)3, 0> >' to 'max<ap_fixed<17, 16, 5, 3, 0> >' (/home/centos/CS133/lab5/lib/cnn-krnl.h:32:26)
 INFO: [HLS 200-472] Inferring partial write operation for 'C.V.0' 
 INFO: [HLS 200-472] Inferring partial write operation for 'C.V.0' 
 INFO: [HLS 200-472] Inferring partial write operation for 'output.V' 
 INFO: [HLS 200-472] Inferring partial write operation for 'weight.V.0' 
-INFO: [HLS 200-472] Inferring partial write operation for 'input.V.0' 
-INFO: [HLS 200-111] Finished Architecture Synthesis Time (s): cpu = 00:01:52 ; elapsed = 00:01:53 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60328 ; free virtual = 82582
+INFO: [HLS 200-472] Inferring partial write operation for 'input.V.0.0' 
+INFO: [HLS 200-111] Finished Architecture Synthesis Time (s): cpu = 00:02:18 ; elapsed = 00:02:18 . Memory (MB): peak = 1629.340 ; gain = 1105.898 ; free physical = 60366 ; free virtual = 82568
 INFO: [HLS 200-10] Starting hardware synthesis ...
 INFO: [HLS 200-10] Synthesizing 'CnnKernel' ...
 WARNING: [SYN 201-103] Legalizing function name 'ReduceOdd<12>' to 'ReduceOdd_12_s'.
@@ -111,17 +114,15 @@ INFO: [HLS 200-42] -- Implementing module 'InitWindow'
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [SCHED 204-11] Starting scheduling ...
 INFO: [SCHED 204-61] Pipelining loop 'init_window'.
-WARNING: [HLS 200-885] Unable to schedule 'load' operation ('array_load_2') on array 'array_r' due to limited memory ports. Please consider using a memory core with more ports or partitioning the array 'array_r'.
-Resolution: For help on HLS 200-885 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-885.html
-INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 6, Depth = 7.
+INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 1.
 INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111]  Elapsed time: 126.93 seconds; current allocated memory: 454.366 MB.
+INFO: [HLS 200-111]  Elapsed time: 142.85 seconds; current allocated memory: 485.045 MB.
 INFO: [BIND 205-100] Starting micro-architecture generation ...
 INFO: [BIND 205-101] Performing variable lifetime analysis.
 INFO: [BIND 205-101] Exploring resource sharing.
 INFO: [BIND 205-101] Binding ...
 INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111]  Elapsed time: 1.25 seconds; current allocated memory: 469.629 MB.
+INFO: [HLS 200-111]  Elapsed time: 1.62 seconds; current allocated memory: 503.003 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-42] -- Implementing module 'ReduceOdd_12_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
@@ -129,13 +130,13 @@ INFO: [SCHED 204-11] Starting scheduling ...
 INFO: [SCHED 204-61] Pipelining function 'ReduceOdd<12>'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 1.
 INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111]  Elapsed time: 1.56 seconds; current allocated memory: 469.895 MB.
+INFO: [HLS 200-111]  Elapsed time: 2 seconds; current allocated memory: 503.265 MB.
 INFO: [BIND 205-100] Starting micro-architecture generation ...
 INFO: [BIND 205-101] Performing variable lifetime analysis.
 INFO: [BIND 205-101] Exploring resource sharing.
 INFO: [BIND 205-101] Binding ...
 INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111]  Elapsed time: 0.02 seconds; current allocated memory: 470.160 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.02 seconds; current allocated memory: 503.532 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-42] -- Implementing module 'ReduceOdd_6_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
@@ -143,13 +144,13 @@ INFO: [SCHED 204-11] Starting scheduling ...
 INFO: [SCHED 204-61] Pipelining function 'ReduceOdd<6>'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 1.
 INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111]  Elapsed time: 0.05 seconds; current allocated memory: 470.254 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.05 seconds; current allocated memory: 503.626 MB.
 INFO: [BIND 205-100] Starting micro-architecture generation ...
 INFO: [BIND 205-101] Performing variable lifetime analysis.
 INFO: [BIND 205-101] Exploring resource sharing.
 INFO: [BIND 205-101] Binding ...
 INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111]  Elapsed time: 0.02 seconds; current allocated memory: 470.365 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.01 seconds; current allocated memory: 503.737 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-42] -- Implementing module 'ReduceOdd_3_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
@@ -157,13 +158,13 @@ INFO: [SCHED 204-11] Starting scheduling ...
 INFO: [SCHED 204-61] Pipelining function 'ReduceOdd<3>'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 1.
 INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111]  Elapsed time: 0.15 seconds; current allocated memory: 470.424 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.03 seconds; current allocated memory: 503.796 MB.
 INFO: [BIND 205-100] Starting micro-architecture generation ...
 INFO: [BIND 205-101] Performing variable lifetime analysis.
 INFO: [BIND 205-101] Exploring resource sharing.
 INFO: [BIND 205-101] Binding ...
 INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111]  Elapsed time: 0.12 seconds; current allocated memory: 470.495 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.01 seconds; current allocated memory: 503.867 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-42] -- Implementing module 'Reduce_2_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
@@ -171,13 +172,13 @@ INFO: [SCHED 204-11] Starting scheduling ...
 INFO: [SCHED 204-61] Pipelining function 'Reduce<2>'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 1.
 INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111]  Elapsed time: 0.03 seconds; current allocated memory: 470.542 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.03 seconds; current allocated memory: 503.929 MB.
 INFO: [BIND 205-100] Starting micro-architecture generation ...
 INFO: [BIND 205-101] Performing variable lifetime analysis.
 INFO: [BIND 205-101] Exploring resource sharing.
 INFO: [BIND 205-101] Binding ...
 INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111]  Elapsed time: 0.01 seconds; current allocated memory: 470.602 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.01 seconds; current allocated memory: 503.989 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-42] -- Implementing module 'Reduce_1_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
@@ -185,13 +186,13 @@ INFO: [SCHED 204-11] Starting scheduling ...
 INFO: [SCHED 204-61] Pipelining function 'Reduce<1>'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 1.
 INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111]  Elapsed time: 0.22 seconds; current allocated memory: 470.638 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.02 seconds; current allocated memory: 504.025 MB.
 INFO: [BIND 205-100] Starting micro-architecture generation ...
 INFO: [BIND 205-101] Performing variable lifetime analysis.
 INFO: [BIND 205-101] Exploring resource sharing.
 INFO: [BIND 205-101] Binding ...
 INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111]  Elapsed time: 0.14 seconds; current allocated memory: 470.678 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.01 seconds; current allocated memory: 504.066 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-42] -- Implementing module 'max_ap_fixed_17_16_5_3_0_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
@@ -199,128 +200,124 @@ INFO: [SCHED 204-11] Starting scheduling ...
 INFO: [SCHED 204-61] Pipelining function 'max<ap_fixed<17, 16, 5, 3, 0> >'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 1.
 INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111]  Elapsed time: 0.22 seconds; current allocated memory: 470.716 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.02 seconds; current allocated memory: 504.103 MB.
 INFO: [BIND 205-100] Starting micro-architecture generation ...
 INFO: [BIND 205-101] Performing variable lifetime analysis.
 INFO: [BIND 205-101] Exploring resource sharing.
 INFO: [BIND 205-101] Binding ...
 INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111]  Elapsed time: 0.22 seconds; current allocated memory: 470.760 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.01 seconds; current allocated memory: 504.147 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-42] -- Implementing module 'CnnKernel_YourCode' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [SCHED 204-11] Starting scheduling ...
 INFO: [HLS 200-486] Changing DSP48 latency (root=mul_ln166_1) to 3 in order to utilize available DSP registers.
 INFO: [HLS 200-486] Changing DSP48 latency (root=mul_ln166) to 3 in order to utilize available DSP registers.
-INFO: [HLS 200-486] Changing DSP48 latency (root=mul_ln359) to 3 in order to utilize available DSP registers.
 INFO: [HLS 200-486] Changing DSP48 latency (root=mul_ln163) to 3 in order to utilize available DSP registers.
 INFO: [HLS 200-486] Changing DSP48 latency (root=mul_ln206) to 3 in order to utilize available DSP registers.
 INFO: [HLS 200-486] Changing DSP48 latency (root=mul_ln206_1) to 3 in order to utilize available DSP registers.
 INFO: [SCHED 204-61] Pipelining loop 'VITIS_LOOP_125_1'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 26.
 INFO: [SCHED 204-61] Pipelining loop 'VITIS_LOOP_183_3'.
-INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 72.
+INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 37.
 INFO: [SCHED 204-61] Pipelining loop 'set_bias_h'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 1.
 INFO: [SCHED 204-61] Pipelining loop 'conv_h'.
-WARNING: [HLS 200-885] Unable to schedule 'load' operation ('input_window.V[4][10]') on array 'input_V_0' due to limited memory ports. Please consider using a memory core with more ports or partitioning the array 'input_V_0'.
-Resolution: For help on HLS 200-885 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-885.html
-INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 6, Depth = 12.
+INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 8.
 INFO: [SCHED 204-61] Pipelining loop 'relu_h'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 2.
 INFO: [SCHED 204-61] Pipelining loop 'maxpool_h'.
-WARNING: [HLS 200-885] Unable to schedule 'store' operation ('output_V_addr_3_write_ln359') of variable 'select_ln32_2', /home/centos/CS133/lab5/lib/cnn-krnl.h:32->/home/centos/CS133/lab5/cnn-krnl.cpp:150 on array 'output_V' due to limited memory ports. Please consider using a memory core with more ports or partitioning the array 'output_V'.
+WARNING: [HLS 200-885] Unable to schedule 'store' operation ('output_V_addr_3_write_ln359') of variable 'select_ln32_2', /home/centos/CS133/lab5/lib/cnn-krnl.h:32->/home/centos/CS133/lab5/cnn-krnl.cpp:151 on array 'output_V' due to limited memory ports. Please consider using a memory core with more ports or partitioning the array 'output_V'.
 Resolution: For help on HLS 200-885 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-885.html
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 14, Depth = 16.
 INFO: [SCHED 204-61] Pipelining loop 'VITIS_LOOP_220_3'.
 INFO: [HLS 200-1470] Pipelining result : Target II = 1, Final II = 1, Depth = 39.
-WARNING: [HLS 200-871] Estimated clock period (3.36488ns) exceeds the target (target clock period: 4ns, clock uncertainty: 1.08ns, effective delay budget: 2.92ns).
+WARNING: [HLS 200-871] Estimated clock period (4.36354ns) exceeds the target (target clock period: 4ns, clock uncertainty: 1.08ns, effective delay budget: 2.92ns).
 Resolution: For help on HLS 200-871 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-871.html
-WARNING: [HLS 200-1016] The critical path in module 'CnnKernel_YourCode' consists of the following:	'phi' operation ('item', /home/centos/CS133/lab5/lib/cnn-krnl.h:183) with incoming values : ('add_ln183', /home/centos/CS133/lab5/lib/cnn-krnl.h:183) [581]  (0 ns)
-	'add' operation ('add_ln185', /home/centos/CS133/lab5/lib/cnn-krnl.h:185) [591]  (0.88 ns)
-	'icmp' operation ('icmp_ln186', /home/centos/CS133/lab5/lib/cnn-krnl.h:186) [592]  (0.884 ns)
-	'and' operation ('and_ln186', /home/centos/CS133/lab5/lib/cnn-krnl.h:186) [595]  (0.122 ns)
-	blocking operation 1.48 ns on control path)
+WARNING: [HLS 200-1016] The critical path in module 'CnnKernel_YourCode' consists of the following:	'call' operation ('C_reduce[0].V', /home/centos/CS133/lab5/cnn-krnl.cpp:128) to 'Reduce<1>' [9884]  (2.41 ns)
+	'add' operation ('add_ln703_74') [9887]  (0.791 ns)
+	'store' operation ('C_V_55_addr_4_write_ln703') of variable 'add_ln703_74' on array 'C_V_55' [9888]  (1.16 ns)
 
 Resolution: For help on HLS 200-1016 see www.xilinx.com/html_docs/xilinx2020_1/hls-guidance/200-1016.html
 INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111]  Elapsed time: 205.56 seconds; current allocated memory: 496.571 MB.
+INFO: [HLS 200-111]  Elapsed time: 182.26 seconds; current allocated memory: 537.318 MB.
 INFO: [BIND 205-100] Starting micro-architecture generation ...
 INFO: [BIND 205-101] Performing variable lifetime analysis.
 INFO: [BIND 205-101] Exploring resource sharing.
 INFO: [BIND 205-101] Binding ...
 INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111]  Elapsed time: 15.18 seconds; current allocated memory: 535.188 MB.
+INFO: [HLS 200-111]  Elapsed time: 24.39 seconds; current allocated memory: 595.095 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-42] -- Implementing module 'CnnKernel' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [SCHED 204-11] Starting scheduling ...
 INFO: [SCHED 204-11] Finished scheduling.
-INFO: [HLS 200-111]  Elapsed time: 5.51 seconds; current allocated memory: 540.034 MB.
+INFO: [HLS 200-111]  Elapsed time: 7.57 seconds; current allocated memory: 601.173 MB.
 INFO: [BIND 205-100] Starting micro-architecture generation ...
 INFO: [BIND 205-101] Performing variable lifetime analysis.
 INFO: [BIND 205-101] Exploring resource sharing.
 INFO: [BIND 205-101] Binding ...
 INFO: [BIND 205-100] Finished micro-architecture generation.
-INFO: [HLS 200-111]  Elapsed time: 1.39 seconds; current allocated memory: 541.673 MB.
+INFO: [HLS 200-111]  Elapsed time: 2.34 seconds; current allocated memory: 603.886 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-10] -- Generating RTL for module 'InitWindow' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [RTGEN 206-100] Generating core module 'mul_8ns_8ns_15_1_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mux_83_1_1_1': 295 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mux_83_8_1_1': 295 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_8ns_6ns_13_1_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mux_83_1_1_1': 300 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mux_83_8_1_1': 359 instance(s).
 INFO: [RTGEN 206-100] Finished creating RTL model for 'InitWindow'.
-INFO: [HLS 200-111]  Elapsed time: 9.64 seconds; current allocated memory: 774.333 MB.
+INFO: [HLS 200-111]  Elapsed time: 11.01 seconds; current allocated memory: 842.093 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-10] -- Generating RTL for module 'ReduceOdd_12_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [RTGEN 206-100] Finished creating RTL model for 'ReduceOdd_12_s'.
-INFO: [HLS 200-111]  Elapsed time: 4.07 seconds; current allocated memory: 819.230 MB.
+INFO: [HLS 200-111]  Elapsed time: 4.62 seconds; current allocated memory: 896.628 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-10] -- Generating RTL for module 'ReduceOdd_6_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [RTGEN 206-100] Finished creating RTL model for 'ReduceOdd_6_s'.
-INFO: [HLS 200-111]  Elapsed time: 0.22 seconds; current allocated memory: 820.524 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.22 seconds; current allocated memory: 897.893 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-10] -- Generating RTL for module 'ReduceOdd_3_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [RTGEN 206-100] Finished creating RTL model for 'ReduceOdd_3_s'.
-INFO: [HLS 200-111]  Elapsed time: 0.19 seconds; current allocated memory: 821.078 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.2 seconds; current allocated memory: 898.447 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-10] -- Generating RTL for module 'Reduce_2_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [RTGEN 206-100] Finished creating RTL model for 'Reduce_2_s'.
-INFO: [HLS 200-111]  Elapsed time: 0.18 seconds; current allocated memory: 821.412 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.19 seconds; current allocated memory: 898.810 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-10] -- Generating RTL for module 'Reduce_1_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [RTGEN 206-100] Finished creating RTL model for 'Reduce_1_s'.
-INFO: [HLS 200-111]  Elapsed time: 0.19 seconds; current allocated memory: 821.666 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.18 seconds; current allocated memory: 899.064 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-10] -- Generating RTL for module 'max_ap_fixed_17_16_5_3_0_s' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [RTGEN 206-100] Finished creating RTL model for 'max_ap_fixed_17_16_5_3_0_s'.
-INFO: [HLS 200-111]  Elapsed time: 0.18 seconds; current allocated memory: 821.885 MB.
+INFO: [HLS 200-111]  Elapsed time: 0.3 seconds; current allocated memory: 899.254 MB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-10] -- Generating RTL for module 'CnnKernel_YourCode' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
-INFO: [RTGEN 206-100] Generating core module 'mac_muladd_8ns_9ns_7ns_16_4_1': 1 instance(s).
+INFO: [RTGEN 206-104] Estimated max fanout for 'CnnKernel_YourCode' is 29896 from HDL expression: (1'b0 == ap_block_pp3_stage0_11001)
 INFO: [RTGEN 206-100] Generating core module 'mac_muladd_9ns_7ns_24ns_24_4_1': 1 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'mac_muladd_9ns_8ns_8ns_16_4_1': 1 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'mul_14s_2ns_15_1_1': 1 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'mul_23ns_21ns_43_1_1': 2 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'mul_34ns_32ns_65_2_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_6ns_9ns_13_1_1': 1 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'mul_8s_8ns_16_1_1': 1400 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'mul_9ns_7ns_15_1_1': 2 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'mul_mul_15ns_9ns_22_4_1': 1 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'mul_mul_17ns_9ns_24_4_1': 1 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'mul_mul_9ns_15ns_22_4_1': 1 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'urem_19ns_4ns_3_23_1': 1 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'urem_21ns_4ns_3_25_1': 1 instance(s).
 INFO: [RTGEN 206-100] Generating core module 'urem_32ns_8ns_7_36_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'urem_32ns_9ns_8_36_1': 1 instance(s).
-INFO: [RTGEN 206-100] Generating core module 'urem_32s_4ns_3_36_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'urem_32ns_9ns_6_36_1': 1 instance(s).
+INFO: [RTGEN 206-100] Generating core module 'urem_7ns_4ns_3_11_seq_1': 1 instance(s).
 INFO: [RTGEN 206-100] Finished creating RTL model for 'CnnKernel_YourCode'.
-INFO: [HLS 200-111]  Elapsed time: 11.48 seconds; current allocated memory: 989.691 MB.
+INFO: [HLS 200-111]  Elapsed time: 68.09 seconds; current allocated memory: 1.079 GB.
 INFO: [HLS 200-10] ----------------------------------------------------------------
 INFO: [HLS 200-10] -- Generating RTL for module 'CnnKernel' 
 INFO: [HLS 200-10] ----------------------------------------------------------------
@@ -333,27 +330,28 @@ INFO: [RTGEN 206-500] Setting interface mode on port 'CnnKernel/output_r' to 's_
 INFO: [RTGEN 206-500] Setting interface mode on function 'CnnKernel' to 's_axilite & ap_ctrl_chain'.
 INFO: [RTGEN 206-100] Bundling port 'input_r', 'weight', 'bias', 'output_r' and 'return' to AXI-Lite port control.
 INFO: [RTGEN 206-100] Finished creating RTL model for 'CnnKernel'.
-INFO: [HLS 200-111]  Elapsed time: 15.58 seconds; current allocated memory: 1.088 GB.
-INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_mul_8ns_8ns_15_1_1_Multiplier_0'
+INFO: [HLS 200-111]  Elapsed time: 21.35 seconds; current allocated memory: 1.247 GB.
+INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_mul_8ns_6ns_13_1_1_Multiplier_0'
 INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_urem_21ns_4ns_3_25_1_div'
 INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_mul_23ns_21ns_43_1_1_Multiplier_1'
 INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_urem_19ns_4ns_3_23_1_div'
 INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_mul_14s_2ns_15_1_1_Multiplier_2'
-INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_urem_32ns_9ns_8_36_1_div'
-INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_urem_32s_4ns_3_36_1_div'
-INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_mul_34ns_32ns_65_2_1_Multiplier_3'
-INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_mul_8s_8ns_16_1_1_Multiplier_4'
+INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_mul_6ns_9ns_13_1_1_Multiplier_3'
+INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_mul_9ns_7ns_15_1_1_Multiplier_4'
+INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_urem_7ns_4ns_3_11_seq_1_div'
+INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_urem_32ns_9ns_6_36_1_div'
+INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_mul_8s_8ns_16_1_1_Multiplier_5'
 INFO: [RTMG 210-282] Generating pipelined core: 'CnnKernel_urem_32ns_8ns_7_36_1_div'
 INFO: [RTMG 210-278] Implementing memory 'CnnKernel_CnnKernel_YourCode_C_V_0_ram (RAM)' using block RAMs with power-on initialization.
-INFO: [RTMG 210-278] Implementing memory 'CnnKernel_CnnKernel_YourCode_C_V_10_ram (RAM)' using block RAMs with power-on initialization.
-INFO: [RTMG 210-278] Implementing memory 'CnnKernel_CnnKernel_YourCode_input_V_0_ram (RAM)' using block RAMs with power-on initialization.
+INFO: [RTMG 210-278] Implementing memory 'CnnKernel_CnnKernel_YourCode_input_V_0_0_ram (RAM)' using block RAMs with power-on initialization.
+INFO: [RTMG 210-278] Implementing memory 'CnnKernel_CnnKernel_YourCode_input_V_1_0_ram (RAM)' using block RAMs with power-on initialization.
 INFO: [RTMG 210-278] Implementing memory 'CnnKernel_CnnKernel_YourCode_weight_V_0_ram (RAM)' using block RAMs with power-on initialization.
 INFO: [RTMG 210-278] Implementing memory 'CnnKernel_CnnKernel_YourCode_output_V_ram (RAM)' using block RAMs with power-on initialization.
-INFO: [HLS 200-111] Finished generating all RTL models Time (s): cpu = 00:06:25 ; elapsed = 00:06:50 . Memory (MB): peak = 2178.180 ; gain = 1654.738 ; free physical = 59399 ; free virtual = 81838
+INFO: [HLS 200-111] Finished generating all RTL models Time (s): cpu = 00:07:30 ; elapsed = 00:08:02 . Memory (MB): peak = 2362.191 ; gain = 1838.750 ; free physical = 59241 ; free virtual = 81677
 INFO: [VHDL 208-304] Generating VHDL RTL for CnnKernel.
 INFO: [VLOG 209-307] Generating Verilog RTL for CnnKernel.
 INFO: [HLS 200-790] **** Loop Constraint Status: All loop constraints were NOT satisfied.
-INFO: [HLS 200-789] **** Estimated Fmax: 297.19 MHz
+INFO: [HLS 200-789] **** Estimated Fmax: 229.17 MHz
 INFO: [IMPL 213-8] Exporting RTL as a Vivado IP.
 
 ****** Vivado v2020.1 (64-bit)
@@ -365,8 +363,8 @@ source run_ippack.tcl -notrace
 INFO: [IP_Flow 19-234] Refreshing IP repositories
 INFO: [IP_Flow 19-1704] No user IP repositories specified
 INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2020.1/data/ip'.
-INFO: [Common 17-206] Exiting Vivado at Wed Mar 10 09:04:09 2021...
+INFO: [Common 17-206] Exiting Vivado at Sun Mar 14 23:54:57 2021...
 INFO: [HLS 200-802] Generated output file CnnKernel/solution/impl/export.zip
 HLS completed successfully
-INFO: [HLS 200-112] Total elapsed time: 427.74 seconds; peak allocated memory: 1.088 GB.
-INFO: [Common 17-206] Exiting vitis_hls at Wed Mar 10 09:04:09 2021...
+INFO: [HLS 200-112] Total elapsed time: 499.36 seconds; peak allocated memory: 1.247 GB.
+INFO: [Common 17-206] Exiting vitis_hls at Sun Mar 14 23:54:58 2021...

@@ -60,7 +60,8 @@ void CnnKernel_YourCode(
   // TODO:  You may want to add array partitioning here, e.g.:
   #pragma HLS array_partition variable=bias factor=16 cyclic
   #pragma HLS array_partition variable=weight dim=3 factor=5 cyclic
-  #pragma HLS array_partition variable=input dim=3 factor=5 cyclic
+  #pragma HLS array_partition variable=input dim=2 factor=5 cyclic
+  #pragma HLS array_partition variable=input dim=3 complete
 
   // Read the whole arrays from memory to device
   read_weight_from_memory(weight_g, weight);
